@@ -1,6 +1,6 @@
 package game.framework.input;
 
-import org.dyn4j.samples.framework.SimulationBody;
+import game.framework.SimulationBody;
 import org.dyn4j.world.World;
 
 import java.awt.*;

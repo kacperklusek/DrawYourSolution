@@ -2,7 +2,6 @@ package game.framework.input;
 
 import game.framework.Camera;
 import org.dyn4j.geometry.Vector2;
-import game.framework.Camera;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

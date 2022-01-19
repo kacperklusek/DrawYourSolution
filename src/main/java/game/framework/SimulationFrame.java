@@ -35,7 +35,7 @@ import org.dyn4j.dynamics.joint.PinJoint;
 import org.dyn4j.geometry.AABB;
 import org.dyn4j.geometry.Transform;
 import org.dyn4j.geometry.Vector2;
-import org.dyn4j.samples.framework.input.*;
+import game.framework.input.*;
 import org.dyn4j.world.World;
 import org.dyn4j.world.WorldCollisionData;
 
@@ -216,21 +216,19 @@ public abstract class SimulationFrame extends JFrame {
 		this.canvas.createBufferStrategy(2);
 		// run a separate thread to do active rendering
 		// because we don't want to do it on the EDT
-		Thread thread = new Thread() {
-			public void run() {
-				// perform an infinite loop stopped
-				// render as fast as possible
-				while (!isStopped()) {
-					gameLoop();
-					// you could add a Thread.yield(); or
-					// Thread.sleep(long) here to give the
-					// CPU some breathing room
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {}
-				}
+		Thread thread = new Thread(() -> {
+			// perform an infinite loop stopped
+			// render as fast as possible
+			while (!isStopped()) {
+				gameLoop();
+				// you could add a Thread.yield(); or
+				// Thread.sleep(long) here to give the
+				// CPU some breathing room
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {}
 			}
-		};
+		});
 		// set the game loop thread to a daemon thread so that
 		// it cannot stop the JVM from exiting
 		thread.setDaemon(true);

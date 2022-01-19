@@ -1,12 +1,12 @@
 package game.framework.input;
 
+import game.framework.Camera;
+import game.framework.SimulationBody;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.joint.Joint;
 import org.dyn4j.dynamics.joint.PinJoint;
 import org.dyn4j.geometry.AABB;
 import org.dyn4j.geometry.Vector2;
-import org.dyn4j.samples.framework.Camera;
-import org.dyn4j.samples.framework.SimulationBody;
 import org.dyn4j.world.World;
 import org.dyn4j.world.result.DetectResult;
 

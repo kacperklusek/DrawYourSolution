@@ -1,6 +1,6 @@
 package game.framework.input;
 
-import org.dyn4j.samples.framework.Camera;
+import game.framework.Camera;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

@@ -1,30 +1,62 @@
 package game;
 
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.joint.PinJoint;
-import org.dyn4j.geometry.Geometry;
-import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Vector2;
-import org.dyn4j.world.World;
+import game.framework.SimulationBody;
+import game.framework.SimulationFrame;
+import org.dyn4j.geometry.*;
 
-public class game {
+import java.awt.*;
 
-    public static void main (String[] args) {
-        World<Body> world = new World<>();
+public class game extends SimulationFrame {
 
-        Body body = new Body();
-        body.addFixture(Geometry.createCircle(1.0));
-        body.translate(1.0, 0.0);
-        body.setMass(MassType.NORMAL);
-        world.addBody(body);
+    public game() {
+        super("Draw Your Solution", 30.0);
+    }
 
-        PinJoint<Body> joint = new PinJoint<Body>(body, new Vector2(0, 0), 4, 0.7, 1000);
-        world.addJoint(joint);
+    @Override
+    protected void initializeWorld() {
+        // Bottom
+        SimulationBody bucketBottom = new SimulationBody();
+        bucketBottom.addFixture(Geometry.createRectangle(15.0, 1.0));
+        bucketBottom.setMass(MassType.INFINITE);
+        bucketBottom.setColor(new Color(53, 165, 245));
+        world.addBody(bucketBottom);
 
-        for (int i = 0; i < 100; i++) {
-            world.step(1);
-        }
+        // Top
+        SimulationBody bucketTop = new SimulationBody();
+        bucketTop.addFixture(Geometry.createRectangle(15.0, 1.0));
+        bucketTop.translate(new Vector2(0.0, 14.0));
+        bucketTop.setMass(MassType.INFINITE);
+        bucketTop.setColor(new Color(53, 165, 245));
+        world.addBody(bucketTop);
+
+        // Left-Side
+        SimulationBody bucketLeft = new SimulationBody();
+        bucketLeft.addFixture(Geometry.createRectangle(1.0, 15.0));
+        bucketLeft.translate(new Vector2(-7.5, 7.0));
+        bucketLeft.setMass(MassType.INFINITE);
+        bucketLeft.setColor(new Color(53, 165, 245));
+        world.addBody(bucketLeft);
+
+        // Right-Side
+        SimulationBody bucketRight = new SimulationBody();
+        bucketRight.addFixture(Geometry.createRectangle(1.0, 15.0));
+        bucketRight.translate(new Vector2(7.5, 7.0));
+        bucketRight.setMass(MassType.INFINITE);
+        bucketRight.setColor(new Color(53, 165, 245));
+        world.addBody(bucketRight);
+
+
+        Circle c = Geometry.createCircle(1.0);
+        SimulationBody b = new SimulationBody();
+        b.addFixture(c);
+        b.translate(new Vector2(-5.0, 3.0));
+        b.setMass(MassType.NORMAL);
+        world.addBody(b);
 
     }
 
+    public static void main(String[] args) {
+        game simulation = new game();
+        simulation.run();
+    }
 }
