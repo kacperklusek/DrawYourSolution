@@ -14,7 +14,6 @@ import org.dyn4j.geometry.Rectangle;
 import java.util.List;
 
 public class ClickHandler {
-    private static final CategoryFilter ALL = new CategoryFilter(1, Long.MAX_VALUE);
 
     int clickCount = 0;
     double[] firstClick = new double[2];
@@ -30,13 +29,15 @@ public class ClickHandler {
                             0.2
                     )
             );
-            bodyFixture.setDensity(0.2);
-            bodyFixture.setFriction(0.3);
-            bodyFixture.setRestitution(0.2);
 
             Body line = new Body();
             line.addFixture(bodyFixture);
             line.setMass(MassType.NORMAL);
+//            Mass mass = new Mass(
+//                    new Vector2(),
+//                    122, 122
+//                    );
+//            line.setMass(mass);
             line.translate( (x + firstClick[0]) / (2 * GUI.SCALE), -(y + firstClick[1]) / (2 * GUI.SCALE));
             line.getTransform().setRotation(-Math.atan(
                     (firstClick[1] - y) / (firstClick[0] - x)
@@ -44,17 +45,17 @@ public class ClickHandler {
             System.out.println(line.getTransform().getRotationAngle());
 
             Body ball = new Body();
-            ball.addFixture(new BodyFixture(new Circle(2)));
-            ball.setMass(MassType.NORMAL);
+            ball.addFixture(new BodyFixture(new Circle(1)));
+            ball.setMass(MassType.INFINITE);
             ball.translate( (firstClick[0]) / (GUI.SCALE), -(firstClick[1]) / (GUI.SCALE));
 
             WeldJoint<Body> rj = new WeldJoint<>(line,
                     ball,
                     new Vector2((firstClick[0]) / (GUI.SCALE), -(firstClick[1]) / (GUI.SCALE)));
+            rj.setFrequency(100);
             world.addBody(ball);
             world.addBody(line);
             world.addJoint(rj);
-
 
         } else {
             firstClick[0] = x;

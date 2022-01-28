@@ -27,7 +27,10 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 
 public class GUI implements WorldListener {
 	public static final int SCALE = 32;
@@ -37,6 +40,11 @@ public class GUI implements WorldListener {
 	public GUI(World world, Group group) {
 		world.addWorldListener(this);
 		this.group = group;
+		Button startButton = new Button("start");
+		startButton.setOnAction(event -> {
+			// do sth
+		});
+		this.group.getChildren().add(startButton);
 	}
 
 	@Override
@@ -52,7 +60,6 @@ public class GUI implements WorldListener {
 				e.getBody().addBodyListener(circle);
 				this.group.getChildren().add(circle);
 			}
-
 		}
 	}
 }

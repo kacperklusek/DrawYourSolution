@@ -30,7 +30,6 @@ package Game;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.dynamics.Body;
@@ -41,7 +40,7 @@ import org.dyn4j.geometry.*;
 
 import java.util.Random;
 
-public class HelloDyn4J extends Application {
+public class Level extends Application {
 
 	private static final CategoryFilter ALL = new CategoryFilter(1, Long.MAX_VALUE);
 	private static final CategoryFilter BALL = new CategoryFilter(2, Long.MAX_VALUE);
@@ -58,35 +57,37 @@ public class HelloDyn4J extends Application {
 		this.primStage.setTitle("HelloDyn4J");
 		this.primStage.sizeToScene();
 
+		// setup scene
 		Group root = new Group();
-
 		Scene scene = new Scene(root, 600, 600);
 		this.primStage.setScene(scene);
 
 		// Creating the world
 		World world = new World();
 		world.setGravity(new Vector2(0., -10.));
-
 		GUI gui = new GUI(world, root);
-
 		Scheduler scheduler = new Scheduler(world);
 
+		// Create world elements
 		createGround(world);
 
+		// start simulation
 		scheduler.start();
 		this.primStage.show();
 
+		// clickHandler
 		scene.setOnMouseClicked(e -> {
-			if (e.getButton() == MouseButton.SECONDARY) {
-//				createBoxAt(world, e.getX(), e.getY());
-				createBallAt(world, e.getX(), e.getY());
-			} else {
-				clickHandler.mouseClicked(e.getX(), e.getY(), world);
-//				Body retvalue = clickHandler.mouseClicked(e.getX(), e.getY());
-//				if (retvalue != null) {
-//					world.addBody(retvalue);
-//				}
-//				createBoxAt(world, e.getX(), e.getY());
+			switch (e.getButton()){
+				case SECONDARY -> {
+					createBallAt(world, e.getX(), e.getY());
+					scheduler.handle(0);
+				}
+				case PRIMARY -> {
+					clickHandler.mouseClicked(e.getX(), e.getY(), world);
+					scheduler.handle(0);
+				}
+				case BACK -> scheduler.stop();
+				case FORWARD -> scheduler.start();
 			}
 		});
 
@@ -109,8 +110,6 @@ public class HelloDyn4J extends Application {
 		ballFixture.setDensity(0.2);
 		ballFixture.setFriction(0.3);
 		ballFixture.setRestitution(0.2);
-//		mniejsze odbijanie się (chyba)
-//		ballFixture.setFilter(BALL);
 
 		Body ball = new Body();
 		ball.addFixture(ballFixture);
