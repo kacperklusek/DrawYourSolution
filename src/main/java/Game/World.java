@@ -27,13 +27,17 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
+import org.dyn4j.collision.Fixture;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.joint.Joint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class World extends org.dyn4j.world.World {
 	List<BodyWrapper> bodies = new ArrayList<>();
+	ItemConfigParser itemConfigParser = new ItemConfigParser();
 
 	// time step for Box2D.
 	float timeStep = 1f / 60f;
@@ -43,6 +47,21 @@ public class World extends org.dyn4j.world.World {
 
 	public World() {
 		super();
+	}
+
+
+	public void addItem(ItemConfig itemConfig) {
+		List<Body> bodies = itemConfigParser.parseBodies(itemConfig);
+		List<Joint<Body>> joints = itemConfigParser.parseJoints(bodies, itemConfig.jointType);
+
+		for (Body body: bodies) {
+			System.out.println("addbody");
+			addBody(body);
+		}
+		for (Joint<Body> joint: joints) {
+			super.addJoint(joint);
+		}
+
 	}
 
 	public void addBody(Body newBody) {

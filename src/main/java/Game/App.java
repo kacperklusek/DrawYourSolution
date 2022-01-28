@@ -40,7 +40,7 @@ import org.dyn4j.geometry.*;
 
 import java.util.Random;
 
-public class Level extends Application {
+public class App extends Application {
 
 	private static final CategoryFilter ALL = new CategoryFilter(1, Long.MAX_VALUE);
 	private static final CategoryFilter BALL = new CategoryFilter(2, Long.MAX_VALUE);
@@ -49,7 +49,12 @@ public class Level extends Application {
 
 	Stage primStage;
 	ClickHandler clickHandler = new ClickHandler();
+	LevelManager levelManager = new LevelManager();
 
+	@Override
+	public void init() {
+		clickHandler.addItemCreationListener(levelManager);
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -57,13 +62,14 @@ public class Level extends Application {
 		this.primStage.setTitle("HelloDyn4J");
 		this.primStage.sizeToScene();
 
+
 		// setup scene
 		Group root = new Group();
 		Scene scene = new Scene(root, 600, 600);
 		this.primStage.setScene(scene);
 
 		// Creating the world
-		World world = new World();
+		World world = levelManager.getWorld();
 		world.setGravity(new Vector2(0., -10.));
 		GUI gui = new GUI(world, root);
 		Scheduler scheduler = new Scheduler(world);
