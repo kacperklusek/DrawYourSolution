@@ -19,11 +19,16 @@ public class ItemConfigParser {
         List<Body> bodiesList = new ArrayList<>();
         for (BodyConfig bodyConfig: itemConfig.bodyConfigs) {
             BodyFixture bodyFixture = getBodyFixture(bodyConfig.shape(), bodyConfig.size());
+
+            // bounciness
+            bodyFixture.setRestitution(0.3);
+
             Body body = new Body();
             body.addFixture(bodyFixture);
             body.setMass(bodyConfig.massType());
             body.translate(bodyConfig.position().x, bodyConfig.position().y);
             body.getTransform().setRotation(bodyConfig.rotation());
+
 
             bodiesList.add(body);
         }

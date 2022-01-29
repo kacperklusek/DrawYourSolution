@@ -32,13 +32,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dyn4j.collision.CategoryFilter;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.geometry.Circle;
-import org.dyn4j.geometry.Rectangle;
-import org.dyn4j.geometry.*;
-
-import java.util.Random;
 
 public class App extends Application {
 
@@ -47,120 +40,52 @@ public class App extends Application {
 	private static final CategoryFilter PIN = new CategoryFilter(4, 1 | 2 | 8);
 	private static final CategoryFilter NOT_BALL = new CategoryFilter(8, 1 | 4);
 
-	Stage primStage;
 	ClickHandler clickHandler = new ClickHandler();
-	LevelManager levelManager = new LevelManager();
+	LevelManager levelManager;
 
 	@Override
 	public void init() {
-		clickHandler.addItemCreationListener(levelManager);
+
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
-		this.primStage = primaryStage;
-		this.primStage.setTitle("HelloDyn4J");
-		this.primStage.sizeToScene();
+		levelManager = new LevelManager();
+		clickHandler.addItemCreationListener(levelManager);
+		primaryStage.setTitle("HelloDyn4J");
+		primaryStage.sizeToScene();
 
 
 		// setup scene
 		Group root = new Group();
-		Scene scene = new Scene(root, 600, 600);
-		this.primStage.setScene(scene);
+		Scene scene = new Scene(root, 800, 1000);
+		primaryStage.setScene(scene);
 
 		// Creating the world
-		World world = levelManager.getWorld();
-		world.setGravity(new Vector2(0., -10.));
-		GUI gui = new GUI(world, root);
-		Scheduler scheduler = new Scheduler(world);
-
-		// Create world elements
-		createGround(world);
+		GUI gui = new GUI(levelManager.getWorld(), root);
+		levelManager.loadLevel();
 
 		// start simulation
-		scheduler.start();
-		this.primStage.show();
+		levelManager.startSimulation();
+		primaryStage.show();
 
 		// clickHandler
 		scene.setOnMouseClicked(e -> {
 			switch (e.getButton()){
-				case SECONDARY -> {
-					createBallAt(world, e.getX(), e.getY());
-					scheduler.handle(0);
+				case SECONDARY, PRIMARY -> {
+					clickHandler.mouseClicked(e.getX(), e.getY(), e.getButton());
 				}
-				case PRIMARY -> {
-					clickHandler.mouseClicked(e.getX(), e.getY(), world);
-					scheduler.handle(0);
-				}
-				case BACK -> scheduler.stop();
-				case FORWARD -> scheduler.start();
 			}
 		});
 
+		// button events
+		scene.setOnKeyPressed(e -> {
+			switch (e.getCode()) {
+				case R -> start(primaryStage);
+				case P -> levelManager.stopSimulation();
+				case L -> levelManager.startSimulation();
+			}
+		});
 	}
 
-
-	private void createGround(World world) {
-		Body ground = new Body();
-		ground.addFixture(Geometry.createRectangle(50.0, 1.0));
-		ground.translate(new Vector2(0.6875, -18.75));
-		ground.setMass(MassType.INFINITE);
-		world.addBody(ground);
-	}
-
-	private void createBallAt(World world, double x, double y) {
-		// create a ball
-		Circle ballShape = new Circle(2.0);
-
-		BodyFixture ballFixture = new BodyFixture(ballShape);
-		ballFixture.setDensity(0.2);
-		ballFixture.setFriction(0.3);
-		ballFixture.setRestitution(0.2);
-
-		Body ball = new Body();
-		ball.addFixture(ballFixture);
-		ball.setMass(MassType.NORMAL);
-		ball.translate(x / GUI.SCALE, -y / GUI.SCALE);
-
-		world.addBody(ball);
-	}
-
-	private void createBoxAt(World world, double x, double y) {
-		// create a box
-		Rectangle rectShape = new Rectangle(2.0, 2.0);
-
-		BodyFixture boxFixture = new BodyFixture(rectShape);
-		boxFixture.setDensity(0.2);
-		boxFixture.setFriction(0.3);
-		boxFixture.setRestitution(0.2);
-
-		Body box = new Body();
-		box.addFixture(boxFixture);
-		box.setMass(MassType.NORMAL);
-		box.translate(x / GUI.SCALE, -y / GUI.SCALE);
-
-		world.addBody(box);
-	}
-
-	private void populate(World world) {
-		// Random generator
-		Random rand = new Random(System.currentTimeMillis());
-
-		for (int i = 0; i < 12; i++) {
-			Rectangle rectShape = new Rectangle(1f + rand.nextFloat() * 4, 1f + rand.nextFloat() * 4);
-
-			BodyFixture boxFixture = new BodyFixture(rectShape);
-			boxFixture.setDensity(0.2);
-			boxFixture.setFriction(0.3);
-			boxFixture.setRestitution(0.2);
-
-			Body box = new Body();
-			box.addFixture(boxFixture);
-			box.setMass(MassType.NORMAL);
-			box.translate(rand.nextInt(40) - 20, rand.nextInt(30) + 70);
-			box.setAngularVelocity((rand.nextFloat() - 0.5f) * 16);
-
-			world.addBody(box);
-		}
-	}
 }
