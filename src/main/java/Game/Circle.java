@@ -30,8 +30,8 @@ public class Circle extends javafx.scene.shape.Circle implements BodyListener{
             Convex bodyShape = fixture.getShape();
 
             AABB aabb = bodyShape.createAABB();
-			setCenterX((position.x + (aabb.getMinX() + aabb.getMaxX())/2) * GUI.SCALE);
-			setCenterY((-position.y + (aabb.getMinY() + aabb.getMaxY())/2) * GUI.SCALE);
+			setCenterX(( position.x + (aabb.getMinX() + aabb.getMaxX())/2) * GUI.SCALE + GUI.BOARD_OFFSET.x);
+			setCenterY((-position.y + (aabb.getMinY() + aabb.getMaxY())/2) * GUI.SCALE + GUI.BOARD_OFFSET.y);
 			setRadius(aabb.getHeight() * GUI.SCALE / 2);
             rotateProperty().set(-Math.toDegrees(angle));
         }

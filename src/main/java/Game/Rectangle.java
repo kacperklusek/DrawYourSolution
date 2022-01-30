@@ -57,8 +57,8 @@ public class Rectangle extends javafx.scene.shape.Rectangle implements BodyListe
 			Convex bodyShape = fixture.getShape();
 
 			AABB aabb = bodyShape.createAABB();
-			setX((position.x + aabb.getMinX()) * GUI.SCALE);
-			setY((-position.y + aabb.getMinY()) * GUI.SCALE);
+			setX(( position.x + aabb.getMinX()) * GUI.SCALE + GUI.BOARD_OFFSET.x);
+			setY((-position.y + aabb.getMinY()) * GUI.SCALE + GUI.BOARD_OFFSET.y);
 			setWidth(aabb.getWidth() * GUI.SCALE);
 			setHeight(aabb.getHeight() * GUI.SCALE);
 			rotateProperty().set(-Math.toDegrees(angle));

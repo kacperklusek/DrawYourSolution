@@ -42,6 +42,7 @@ public class App extends Application {
 
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
+    Persistency persistency = new Persistency();
 
 	@Override
 	public void init() {
@@ -50,20 +51,21 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		levelManager = new LevelManager();
-		clickHandler.addItemCreationListener(levelManager);
-		primaryStage.setTitle("HelloDyn4J");
+		primaryStage.setTitle("DrawYourSolution");
 		primaryStage.sizeToScene();
 
 
 		// setup scene
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 1000);
+		Scene scene = new Scene(root, 1920*0.7, 1080*0.7);
 		primaryStage.setScene(scene);
 
 		// Creating the world
+		levelManager = new LevelManager();
 		GUI gui = new GUI(levelManager.getWorld(), root);
-		levelManager.loadLevel();
+		clickHandler.addItemCreationListener(levelManager);
+        levelManager.createBoundaries();
+		levelManager.loadLevel(persistency.loadLevel("1"));
 
 		// start simulation
 		levelManager.startSimulation();

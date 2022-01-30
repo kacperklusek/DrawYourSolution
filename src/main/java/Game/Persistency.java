@@ -10,30 +10,21 @@ public class Persistency {
 
 
     //  dopóki nie mamy persystencji na dysku tworze jakiś basic level
-    public LevelConfig getLevel(){
+    public LevelConfig loadLevel(String levelName){
         // itemConfigs
         List<ItemConfig> itemConfigs = new ArrayList<>();
 
         // make bodyConfigs
-        ItemConfig groundConfig = new ItemConfig();
-        groundConfig.addBodyConfig(new BodyConfig(
-                ShapeType.RECTANGLE,
-                new Vector2(12.5, -31),
-                new Vector2(25, 1),
-                0,
-                MassType.INFINITE
-        ));
         ItemConfig obstacleConfig = new ItemConfig();
         obstacleConfig.addBodyConfig(new BodyConfig(
                 ShapeType.RECTANGLE,
-                new Vector2(12.5, -25),
+                new Vector2(12.5, -10),
                 new Vector2(12, 1),
                 Math.PI/2,
                 MassType.INFINITE
         ));
 
         itemConfigs.add(obstacleConfig);
-        itemConfigs.add(groundConfig);
 
         //Target
         List<Vector2> target = new ArrayList<>();
@@ -41,5 +32,9 @@ public class Persistency {
         target.add(new Vector2(25, -31));
 
         return new LevelConfig(itemConfigs, target);
+    }
+
+    public void saveLevel(String levelName, LevelConfig levelConfig){
+
     }
 }

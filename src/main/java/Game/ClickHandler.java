@@ -41,7 +41,8 @@ public class ClickHandler {
             // create rectangle bodyConfig
             BodyConfig rectangleConfig = new BodyConfig(
                     ShapeType.RECTANGLE,
-                    new Vector2((x + firstClick.x) / (2 * GUI.SCALE), -(y + firstClick.y) / (2 * GUI.SCALE)),
+                    new Vector2((x + firstClick.x - 2 * GUI.BOARD_OFFSET.x) / (2 * GUI.SCALE),
+                               -(y + firstClick.y - 2 * GUI.BOARD_OFFSET.y) / (2 * GUI.SCALE)),
                     new Vector2(Math.sqrt(Math.pow(x - firstClick.x, 2) + Math.pow(y - firstClick.y, 2)) / GUI.SCALE,
                             0.2),
                     -Math.atan((firstClick.y - y) / (firstClick.x - x)),
@@ -65,7 +66,8 @@ public class ClickHandler {
         // create ball bodyConfig
         BodyConfig bodyConfig = new BodyConfig(
                 ShapeType.CIRCLE,
-                new Vector2(x / GUI.SCALE, -y / GUI.SCALE),
+                new Vector2((x+ GUI.BOARD_OFFSET.x) / GUI.SCALE,
+                           (-y+ GUI.BOARD_OFFSET.y) / GUI.SCALE),
                 new Vector2(2, 2), // dla circle radius będzie jedną ze współrzędnych
                 0,
                 MassType.NORMAL

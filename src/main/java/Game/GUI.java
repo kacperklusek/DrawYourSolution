@@ -31,9 +31,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import org.dyn4j.geometry.Vector2;
 
 public class GUI implements WorldListener {
 	public static final int SCALE = 32;
+    public static final Vector2 BOARD_OFFSET = new Vector2(0.5*SCALE, 1.4*SCALE);
 
 	Group group;
 
