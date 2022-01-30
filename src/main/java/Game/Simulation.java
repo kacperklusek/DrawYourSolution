@@ -1,5 +1,6 @@
 package Game;
 
+import Game.configs.ItemConfig;
 import org.dyn4j.geometry.Vector2;
 
 public class Simulation {

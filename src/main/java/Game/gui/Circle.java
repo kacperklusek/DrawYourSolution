@@ -1,5 +1,8 @@
-package Game;
+package Game.gui;
 
+import Game.BodyEvent;
+import Game.BodyListener;
+import Game.gui.GUI;
 import javafx.scene.paint.Color;
 import org.dyn4j.collision.Fixture;
 import org.dyn4j.dynamics.Body;
@@ -9,7 +12,7 @@ import org.dyn4j.geometry.Vector2;
 
 import java.util.Random;
 
-public class Circle extends javafx.scene.shape.Circle implements BodyListener{
+public class Circle extends javafx.scene.shape.Circle implements BodyListener {
     private static Random randomGenerator = new Random(System.currentTimeMillis());
 
     public Circle() {

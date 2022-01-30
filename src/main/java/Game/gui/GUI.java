@@ -25,10 +25,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org>
 **********************************************************************/
 
-package Game;
+package Game.gui;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import Game.*;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import org.dyn4j.geometry.Vector2;

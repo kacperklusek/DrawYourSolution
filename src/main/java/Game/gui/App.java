@@ -25,8 +25,11 @@
  * For more information, please refer to <http://unlicense.org>
  **********************************************************************/
 
-package Game;
+package Game.gui;
 
+import Game.ClickHandler;
+import Game.LevelManager;
+import Game.Persistency;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

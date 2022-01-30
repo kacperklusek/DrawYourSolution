@@ -1,4 +1,4 @@
-package Game;
+package Game.configs;
 
 public enum JointType {
     WELD,

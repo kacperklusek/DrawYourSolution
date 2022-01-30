@@ -1,6 +1,9 @@
-package Game;
+package Game.configs;
 
-import org.dyn4j.collision.Fixture;
+import Game.configs.BodyConfig;
+import Game.configs.ItemConfig;
+import Game.configs.JointType;
+import Game.configs.ShapeType;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.joint.Joint;

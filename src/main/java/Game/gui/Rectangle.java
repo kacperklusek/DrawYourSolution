@@ -25,8 +25,11 @@
  * For more information, please refer to <http://unlicense.org>
  **********************************************************************/
 
-package Game;
+package Game.gui;
 
+import Game.BodyEvent;
+import Game.BodyListener;
+import Game.gui.GUI;
 import javafx.scene.paint.Color;
 import org.dyn4j.collision.Fixture;
 import org.dyn4j.dynamics.Body;

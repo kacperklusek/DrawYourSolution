@@ -1,15 +1,12 @@
 package Game;
 
+import Game.configs.BodyConfig;
+import Game.configs.ItemConfig;
+import Game.configs.JointType;
+import Game.gui.GUI;
+import Game.configs.ShapeType;
 import javafx.scene.input.MouseButton;
-import org.dyn4j.collision.CategoryFilter;
-import org.dyn4j.collision.Fixture;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.joint.Joint;
-import org.dyn4j.dynamics.joint.RevoluteJoint;
-import org.dyn4j.dynamics.joint.WeldJoint;
 import org.dyn4j.geometry.*;
-import org.dyn4j.geometry.Circle;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -27,12 +27,10 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
-import org.dyn4j.collision.Fixture;
+import Game.configs.ItemConfig;
+import Game.configs.ItemConfigParser;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.joint.Joint;
-import org.dyn4j.geometry.Rectangle;
-import org.dyn4j.geometry.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
