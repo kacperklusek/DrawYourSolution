@@ -27,8 +27,12 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
+import Game.configs.TargetConfig;
+
 import java.util.EventListener;
 
-public interface WorldListener extends EventListener {
+public interface BoardStateListener extends EventListener {
 	void worldUpdate(WorldEvent e);
+
+	void targetAdded(TargetConfig targetConfig);
 }

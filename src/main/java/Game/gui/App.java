@@ -31,10 +31,7 @@ import Game.ClickHandler;
 import Game.LevelManager;
 import Game.Persistency;
 import Game.Vector2Serial;
-import Game.configs.BodyConfig;
-import Game.configs.ItemConfig;
-import Game.configs.LevelConfig;
-import Game.configs.ShapeType;
+import Game.configs.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -76,7 +73,8 @@ public class App extends Application {
 
 		// Creating the world
 		levelManager = new LevelManager();
-		GUI gui = new GUI(levelManager.getWorld(), root);
+		BoardGui gui = new BoardGui(root);
+		levelManager.addBoardStateListener(gui);
 		clickHandler.addItemCreationListener(levelManager);
         levelManager.createBoundaries();
         try {
@@ -93,10 +91,15 @@ public class App extends Application {
             ));
             List<ItemConfig> itemList = new ArrayList<>();
             itemList.add(defaultCircle);
-            List<Vector2Serial> target = new ArrayList<>();
-            target.add(new Vector2Serial(15, -20));
-            target.add(new Vector2Serial(20, -25));
-            levelManager.loadLevel(new LevelConfig(itemList, target));
+			List<TargetConfig> targetConfigs = new ArrayList<>();
+			targetConfigs.add(new TargetConfig(
+					ShapeType.RECTANGLE,
+					new Vector2Serial(22, 17),
+					new Vector2Serial(5, 5),
+					0
+			));
+
+			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs));
         }
 
         // start simulation

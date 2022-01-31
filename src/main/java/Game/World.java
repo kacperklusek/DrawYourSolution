@@ -29,13 +29,14 @@ package Game;
 
 import Game.configs.ItemConfig;
 import Game.configs.ItemConfigParser;
+import Game.configs.TargetConfig;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.joint.Joint;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class World extends org.dyn4j.world.World {
+public class World extends org.dyn4j.world.World implements BoardStatePublisher{
 	List<BodyWrapper> bodies = new ArrayList<>();
 	ItemConfigParser itemConfigParser = new ItemConfigParser();
 
@@ -43,7 +44,7 @@ public class World extends org.dyn4j.world.World {
 	float timeStep = 1f / 60f;
 
 	// listeners
-	private final List<WorldListener> listeners = new ArrayList<>();
+	private final List<BoardStateListener> listeners = new ArrayList<>();
 
 	public World() {
 		super();
@@ -80,34 +81,41 @@ public class World extends org.dyn4j.world.World {
 		fireWorldUpdate();
 	}
 
-	public void addWorldListener(WorldListener worldListener) {
-		assert (worldListener != null);
+	@Override
+	public void addBoardStateListener(BoardStateListener worldListener) {
 		this.listeners.add(worldListener);
 	}
 
-	public void removeWorldListener(WorldListener worldListener) {
-		assert (worldListener != null);
+	@Override
+	public void removeBoardStateListener(BoardStateListener worldListener) {
 		this.listeners.remove(worldListener);
 	}
 
-	private void fireEvent(WorldEvent e) {
-		for (final WorldListener worldListener : this.listeners) {
-			worldListener.worldUpdate(e);
+	@Override
+	public void notifyAllWorldUpdate(WorldEvent event) {
+		for(BoardStateListener listener : listeners) {
+			listener.worldUpdate(event);
 		}
 	}
 
+	@Override
+	public void notifyAllTargetAdded(TargetConfig targetConfig) {
+		throw new UnsupportedOperationException();
+	}
+
+
 	private void fireWorldUpdate() {
 		final WorldEvent e = new WorldEvent(this, WorldEvent.Type.WORLD_UPDATE);
-		fireEvent(e);
+		notifyAllWorldUpdate(e);
 	}
 
 	private void fireBodyAdded(BodyWrapper body) {
 		final WorldEvent e = new WorldEvent(this, body, WorldEvent.Type.BODY_ADDED);
-		fireEvent(e);
+		notifyAllWorldUpdate(e);
 	}
 
 	private void fireBodyRemoved(BodyWrapper body) {
 		final WorldEvent e = new WorldEvent(this, body, WorldEvent.Type.BODY_REMOVED);
-		fireEvent(e);
+		notifyAllWorldUpdate(e);
 	}
 }

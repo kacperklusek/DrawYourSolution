@@ -1,9 +1,6 @@
 package Game;
 
-import Game.configs.BodyConfig;
-import Game.configs.ItemConfig;
-import Game.configs.LevelConfig;
-import Game.configs.ShapeType;
+import Game.configs.*;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -13,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class LevelManager implements ItemCreationListener{
+public class LevelManager implements ItemCreationListener, BoardStatePublisher{
     private final double HEIGHT = 21;
     private final double WIDTH = 27;
 
@@ -22,17 +19,19 @@ public class LevelManager implements ItemCreationListener{
     private LevelConfig levelConfig;
     private List<ItemConfig> addedItems;
 
+    private List<BoardStateListener> listeners;
+
     public LevelManager() {
         this.world = new World();
         // setting default gravity
         world.setGravity(new Vector2(0., -10.));
         this.scheduler = new Scheduler(world);
         addedItems = new ArrayList<>();
+        listeners = new ArrayList<>();
     }
 
     @Override
     public void itemCreated(ItemConfig itemConfig) {
-        // i tu w sumie robie notify Simulation i przekazuje to po prostu dalej? troche bez sensu
         world.addItem(itemConfig);
         addedItems.add(itemConfig);
         // if simulation is paused => render one frame for item to appear
@@ -53,11 +52,13 @@ public class LevelManager implements ItemCreationListener{
 
     public void loadLevel(LevelConfig levelConfig) {
         this.levelConfig = levelConfig;
+        for (TargetConfig targetConfig: levelConfig.targetConfigs) {
+            notifyAllTargetAdded(targetConfig);
+        }
         for (ItemConfig itemConfig: this.levelConfig.itemConfigs) {
             world.addItem(itemConfig);
         }
-//        // fixme
-//        world.addTarget(level.target);
+
         // refresh window
         scheduler.handle(0);
     }
@@ -106,6 +107,30 @@ public class LevelManager implements ItemCreationListener{
     public LevelConfig generateLevelConfig() {
         return new LevelConfig(Stream.of(levelConfig.itemConfigs, addedItems)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList()), levelConfig.target);
+                .collect(Collectors.toList()), levelConfig.targetConfigs);
+    }
+
+    @Override
+    public void addBoardStateListener(BoardStateListener listener) {
+        this.listeners.add(listener);
+        world.addBoardStateListener(listener);
+    }
+
+    @Override
+    public void removeBoardStateListener(BoardStateListener listener) {
+        this.listeners.remove(listener);
+        world.addBoardStateListener(listener);
+    }
+
+    @Override
+    public void notifyAllWorldUpdate(WorldEvent event){
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void notifyAllTargetAdded(TargetConfig targetConfig) {
+        for(BoardStateListener lister: listeners) {
+            lister.targetAdded(targetConfig);
+        }
     }
 }

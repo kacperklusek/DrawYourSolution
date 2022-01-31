@@ -28,18 +28,19 @@ For more information, please refer to <http://unlicense.org>
 package Game.gui;
 
 import Game.*;
+import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import org.dyn4j.geometry.Vector2;
 
-public class GUI implements WorldListener {
+public class BoardGui implements BoardStateListener {
 	public static final int SCALE = 32;
     public static final Vector2 BOARD_OFFSET = new Vector2(0.5*SCALE, 1.4*SCALE);
 
 	Group group;
 
-	public GUI(World world, Group group) {
-		world.addWorldListener(this);
+	public BoardGui(Group group) {
 		this.group = group;
 		Button startButton = new Button("start");
 		startButton.setOnAction(event -> {
@@ -63,4 +64,20 @@ public class GUI implements WorldListener {
 			}
 		}
 	}
+
+	@Override
+	public void targetAdded(TargetConfig targetConfig) {
+		switch (targetConfig.shape()) {
+			case RECTANGLE -> {
+				javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle();
+				rectangle.setX(targetConfig.position().x * SCALE);
+				rectangle.setY(targetConfig.position().y * SCALE);
+				rectangle.setWidth(targetConfig.size().x * SCALE);
+				rectangle.setHeight(targetConfig.size().y * SCALE);
+				rectangle.setFill(Color.GREEN);
+				this.group.getChildren().add(rectangle);
+			}
+		}
+	}
+
 }
