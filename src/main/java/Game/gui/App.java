@@ -49,7 +49,7 @@ public class App extends Application {
 
 	@Override
 	public void init() {
-
+        persistency.saveLevel("test", null);
 	}
 
 	@Override
