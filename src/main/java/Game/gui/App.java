@@ -46,10 +46,8 @@ import java.util.List;
 
 public class App extends Application {
 
-	private static final CategoryFilter ALL = new CategoryFilter(1, Long.MAX_VALUE);
-	private static final CategoryFilter BALL = new CategoryFilter(2, Long.MAX_VALUE);
-	private static final CategoryFilter PIN = new CategoryFilter(4, 1 | 2 | 8);
-	private static final CategoryFilter NOT_BALL = new CategoryFilter(8, 1 | 4);
+	private final double SCENE_WIDTH = 1920*0.7;
+	private final double SCENE_HEIGHT = 1080*0.7;
 
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
@@ -68,7 +66,7 @@ public class App extends Application {
 
 		// setup scene
 		Group root = new Group();
-		Scene scene = new Scene(root, 1920*0.7, 1080*0.7);
+		Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 		primaryStage.setScene(scene);
 
 		// Creating the world
@@ -76,6 +74,7 @@ public class App extends Application {
 		BoardGui gui = new BoardGui(root);
 		levelManager.addBoardStateListener(gui);
 		clickHandler.addItemCreationListener(levelManager);
+		clickHandler.setBoardPosition(levelManager.getHEIGHT(), levelManager.getWIDTH(), BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
             levelManager.loadLevel(persistency.loadLevel("1"));
@@ -98,9 +97,16 @@ public class App extends Application {
 					new Vector2Serial(5, 5),
 					0
 			));
+			List<ConstraintConfig> constraintConfigs = new ArrayList<>();
+			constraintConfigs.add( new ConstraintConfig(
+					ShapeType.RECTANGLE,
+					new Vector2Serial(22, 2),
+					new Vector2Serial(5, 16)
+			));
 
-			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs));
+			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs, constraintConfigs));
         }
+		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 
         // start simulation
 		levelManager.startSimulation();
@@ -108,12 +114,8 @@ public class App extends Application {
 
 		// clickHandler
 		scene.setOnMouseClicked(e -> {
-			switch (e.getButton()){
-				case SECONDARY, PRIMARY -> {
-					clickHandler.mouseClicked(e.getX(), e.getY(), e.getButton());
-				}
-			}
-		});
+			clickHandler.mouseClicked(e.getX(), e.getY(), e.getButton());
+			});
 
 		// button events
 		scene.setOnKeyPressed(e -> {

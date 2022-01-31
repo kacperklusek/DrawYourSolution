@@ -11,11 +11,23 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LevelManager implements ItemCreationListener, BoardStatePublisher{
+    public double getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public double getWIDTH() {
+        return WIDTH;
+    }
+
     private final double HEIGHT = 21;
     private final double WIDTH = 27;
 
     private World world;
     private Scheduler scheduler;
+
+    public LevelConfig getLevelConfig() {
+        return levelConfig;
+    }
     private LevelConfig levelConfig;
     private List<ItemConfig> addedItems;
 
@@ -52,6 +64,9 @@ public class LevelManager implements ItemCreationListener, BoardStatePublisher{
 
     public void loadLevel(LevelConfig levelConfig) {
         this.levelConfig = levelConfig;
+        for (ConstraintConfig constraintConfig: levelConfig.constraintConfigs) {
+            notifyAllConstraintAdded(constraintConfig);
+        }
         for (TargetConfig targetConfig: levelConfig.targetConfigs) {
             notifyAllTargetAdded(targetConfig);
         }
@@ -107,7 +122,8 @@ public class LevelManager implements ItemCreationListener, BoardStatePublisher{
     public LevelConfig generateLevelConfig() {
         return new LevelConfig(Stream.of(levelConfig.itemConfigs, addedItems)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList()), levelConfig.targetConfigs);
+                .collect(Collectors.toList()), levelConfig.targetConfigs,
+                levelConfig.constraintConfigs);
     }
 
     @Override
@@ -131,6 +147,13 @@ public class LevelManager implements ItemCreationListener, BoardStatePublisher{
     public void notifyAllTargetAdded(TargetConfig targetConfig) {
         for(BoardStateListener lister: listeners) {
             lister.targetAdded(targetConfig);
+        }
+    }
+
+    @Override
+    public void notifyAllConstraintAdded(ConstraintConfig constraintConfig) {
+        for(BoardStateListener listener: listeners) {
+            listener.constraintAdded(constraintConfig);
         }
     }
 }

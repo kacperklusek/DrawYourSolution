@@ -1,5 +1,6 @@
 package Game;
 
+import Game.configs.ConstraintConfig;
 import Game.configs.TargetConfig;
 
 public interface BoardStatePublisher {
@@ -10,4 +11,6 @@ public interface BoardStatePublisher {
     public void notifyAllWorldUpdate(WorldEvent event);
 
     public void notifyAllTargetAdded(TargetConfig targetConfig);
+
+    public void notifyAllConstraintAdded(ConstraintConfig constraintConfig);
 }

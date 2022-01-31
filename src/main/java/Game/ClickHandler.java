@@ -1,17 +1,18 @@
 package Game;
 
-import Game.configs.BodyConfig;
-import Game.configs.ItemConfig;
-import Game.configs.JointType;
+import Game.configs.*;
 import Game.gui.BoardGui;
-import Game.configs.ShapeType;
 import javafx.scene.input.MouseButton;
 import org.dyn4j.geometry.*;
+import org.dyn4j.world.listener.BoundsListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClickHandler {
+
+    private Vector2Serial upperLeft, lowerRight;
+    private List<ConstraintConfig> constraintConfigs;
 
     int clickCount = 0;
     Vector2 firstClick = new Vector2(0,0);
@@ -19,6 +20,7 @@ public class ClickHandler {
     List<ItemCreationListener> listeners = new ArrayList<>();
 
     public void mouseClicked(double x, double y, MouseButton mouseButton) {
+        if ((! isInBoard(x, y)) || (isInConstraint(x, y))) {return;}
         switch (mouseButton) {
             case PRIMARY -> handlePRIMARY(x, y);
             case SECONDARY -> handleSECONDARY(x, y);
@@ -26,9 +28,8 @@ public class ClickHandler {
     }
 
     private void handlePRIMARY(double x, double y) {
-        if ((x != firstClick.x || y != firstClick.y)){
-            clickCount ++;
-        }
+        if (x == firstClick.x && y == firstClick.y) {return;}
+        clickCount ++;
         if (clickCount == 2){
             clickCount %= 2;
 
@@ -53,6 +54,30 @@ public class ClickHandler {
         } else {
             firstClick.set(x, y);
         }
+    }
+
+    private boolean isInBoard(double x, double y) {
+        Vector2Serial v = new Vector2Serial(x, y);
+        return v.follows(upperLeft) && v.precedes(lowerRight);
+    }
+
+    private boolean isInConstraint(double x, double y) {
+        Vector2Serial v = new Vector2Serial(x, y);
+        for(ConstraintConfig con: constraintConfigs) {
+            switch (con.shape()){
+                case RECTANGLE -> {
+                    if(v.follows(con.position()) && v.precedes(con.position().add(con.size()))) {
+                        return true;
+                    }
+                }
+                case CIRCLE -> {
+                    if(v.distance(con.position()) <= con.size().x) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void handleSECONDARY(double x, double y) {
@@ -84,5 +109,14 @@ public class ClickHandler {
         for (ItemCreationListener listener: listeners) {
             listener.itemCreated(itemConfig);
         }
+    }
+
+    public void setBoardPosition(double width, double height, Vector2Serial offset) {
+        upperLeft = new Vector2Serial(0, 0).add(offset);
+        lowerRight = new Vector2Serial(width * BoardGui.SCALE, height * BoardGui.SCALE).add(offset);
+    }
+
+    public void setConstraints(List<ConstraintConfig> constraintConfigs){
+        this.constraintConfigs = constraintConfigs;
     }
 }

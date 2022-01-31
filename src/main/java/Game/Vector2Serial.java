@@ -23,4 +23,21 @@ public class Vector2Serial implements Serializable {
         return new Vector2(x, y);
     }
 
+    public Vector2Serial add(Vector2Serial v) {
+        return new Vector2Serial(x + v.x, y + v.y);
+    }
+
+    public boolean follows(Vector2Serial v) {
+        return x >= v.x && y >= v.y;
+    }
+
+    public boolean precedes(Vector2Serial v) {
+        return x <= v.x && y < v.y;
+    }
+
+    public double distance(Vector2Serial v) {
+        double dx = x - v.x;
+        double dy = y - v.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }

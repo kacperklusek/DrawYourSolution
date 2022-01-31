@@ -28,15 +28,18 @@ For more information, please refer to <http://unlicense.org>
 package Game.gui;
 
 import Game.*;
+import Game.configs.ConstraintConfig;
+import Game.configs.ShapeType;
 import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 import org.dyn4j.geometry.Vector2;
 
 public class BoardGui implements BoardStateListener {
 	public static final int SCALE = 32;
-    public static final Vector2 BOARD_OFFSET = new Vector2(0.5*SCALE, 1.4*SCALE);
+    public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.4*SCALE);
 
 	Group group;
 
@@ -67,17 +70,42 @@ public class BoardGui implements BoardStateListener {
 
 	@Override
 	public void targetAdded(TargetConfig targetConfig) {
-		switch (targetConfig.shape()) {
+		drawShape(
+			targetConfig.shape(),
+			targetConfig.position(),
+			targetConfig.size(),
+			Color.GREEN
+		);
+	}
+
+	@Override
+	public void constraintAdded(ConstraintConfig constraintConfig) {
+		drawShape(
+				constraintConfig.shape(),
+				constraintConfig.position(),
+				constraintConfig.size(),
+				Color.LIGHTBLUE
+		);
+	}
+
+	private void drawShape(ShapeType shapeType, Vector2Serial position, Vector2Serial size, Color color) {
+		switch (shapeType) {
 			case RECTANGLE -> {
-				javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle();
-				rectangle.setX(targetConfig.position().x * SCALE);
-				rectangle.setY(targetConfig.position().y * SCALE);
-				rectangle.setWidth(targetConfig.size().x * SCALE);
-				rectangle.setHeight(targetConfig.size().y * SCALE);
-				rectangle.setFill(Color.GREEN);
-				this.group.getChildren().add(rectangle);
+				javafx.scene.shape.Rectangle shape = new javafx.scene.shape.Rectangle();
+				shape.setWidth(size.x * SCALE);
+				shape.setHeight(size.y * SCALE);
+				shape.setX(position.x * SCALE);
+				shape.setY(position.y * SCALE);
+				shape.setFill(color);
+				this.group.getChildren().add(shape);
+			}
+			case CIRCLE -> {
+				javafx.scene.shape.Circle shape = new javafx.scene.shape.Circle();
+				shape.setRadius(size.x);
+				shape.setCenterX(position.x * SCALE);
+				shape.setCenterY(position.y * SCALE);
+				shape.setFill(color);
 			}
 		}
 	}
-
 }

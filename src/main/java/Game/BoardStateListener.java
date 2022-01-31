@@ -27,6 +27,7 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
+import Game.configs.ConstraintConfig;
 import Game.configs.TargetConfig;
 
 import java.util.EventListener;
@@ -35,4 +36,6 @@ public interface BoardStateListener extends EventListener {
 	void worldUpdate(WorldEvent e);
 
 	void targetAdded(TargetConfig targetConfig);
+
+	void constraintAdded(ConstraintConfig constraintConfig);
 }

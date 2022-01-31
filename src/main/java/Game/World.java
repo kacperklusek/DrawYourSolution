@@ -27,11 +27,14 @@ For more information, please refer to <http://unlicense.org>
 
 package Game;
 
+import Game.configs.ConstraintConfig;
 import Game.configs.ItemConfig;
 import Game.configs.ItemConfigParser;
 import Game.configs.TargetConfig;
+import org.dyn4j.collision.CollisionPair;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.joint.Joint;
+import org.dyn4j.world.CollisionData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +53,11 @@ public class World extends org.dyn4j.world.World implements BoardStatePublisher{
 		super();
 	}
 
-
 	public void addItem(ItemConfig itemConfig) {
 		List<Body> bodies = itemConfigParser.parseBodies(itemConfig);
 		List<Joint<Body>> joints = itemConfigParser.parseJoints(bodies, itemConfig.jointType);
 
 		for (Body body: bodies) {
-			System.out.println("addbody");
 			addBody(body);
 		}
 		for (Joint<Body> joint: joints) {
@@ -103,6 +104,10 @@ public class World extends org.dyn4j.world.World implements BoardStatePublisher{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public void notifyAllConstraintAdded(ConstraintConfig constraintConfig) {
+		throw new UnsupportedOperationException();
+	}
 
 	private void fireWorldUpdate() {
 		final WorldEvent e = new WorldEvent(this, WorldEvent.Type.WORLD_UPDATE);
