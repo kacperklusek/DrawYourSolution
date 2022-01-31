@@ -30,11 +30,22 @@ package Game.gui;
 import Game.ClickHandler;
 import Game.LevelManager;
 import Game.Persistency;
+import Game.Vector2Serial;
+import Game.configs.BodyConfig;
+import Game.configs.ItemConfig;
+import Game.configs.LevelConfig;
+import Game.configs.ShapeType;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dyn4j.collision.CategoryFilter;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Vector2;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App extends Application {
 
@@ -49,7 +60,7 @@ public class App extends Application {
 
 	@Override
 	public void init() {
-        persistency.saveLevel("test", null);
+
 	}
 
 	@Override
@@ -68,9 +79,27 @@ public class App extends Application {
 		GUI gui = new GUI(levelManager.getWorld(), root);
 		clickHandler.addItemCreationListener(levelManager);
         levelManager.createBoundaries();
-		levelManager.loadLevel(persistency.loadLevel("1"));
+        try {
+            levelManager.loadLevel(persistency.loadLevel("1"));
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            ItemConfig defaultCircle = new ItemConfig();
+            defaultCircle.addBodyConfig(new BodyConfig(
+                    ShapeType.CIRCLE,
+                    new Vector2(5, -5),
+                    new Vector2(2, 2),
+                    0,
+                    MassType.INFINITE
+            ));
+            List<ItemConfig> itemList = new ArrayList<>();
+            itemList.add(defaultCircle);
+            List<Vector2Serial> target = new ArrayList<>();
+            target.add(new Vector2Serial(15, -20));
+            target.add(new Vector2Serial(20, -25));
+            levelManager.loadLevel(new LevelConfig(itemList, target));
+        }
 
-		// start simulation
+        // start simulation
 		levelManager.startSimulation();
 		primaryStage.show();
 
@@ -89,6 +118,7 @@ public class App extends Application {
 				case R -> start(primaryStage);
 				case P -> levelManager.stopSimulation();
 				case L -> levelManager.startSimulation();
+                case S -> persistency.saveLevel("1", levelManager.generateLevelConfig());
 			}
 		});
 	}

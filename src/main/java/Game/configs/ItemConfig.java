@@ -3,10 +3,11 @@ package Game.configs;
 import Game.configs.BodyConfig;
 import Game.configs.JointType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemConfig {
+public class ItemConfig implements Serializable {
     public List<BodyConfig> bodyConfigs = new ArrayList<>();
     public JointType jointType;
 

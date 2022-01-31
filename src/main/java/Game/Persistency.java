@@ -15,65 +15,36 @@ public class Persistency {
 
 
     //  dopóki nie mamy persystencji na dysku tworze jakiś basic level
-    public LevelConfig loadLevel(String levelName){
-        // itemConfigs
-        List<ItemConfig> itemConfigs = new ArrayList<>();
+    public LevelConfig loadLevel(String levelName) throws IOException, ClassNotFoundException {
 
-        // make bodyConfigs
-        ItemConfig obstacleConfig = new ItemConfig();
-        obstacleConfig.addBodyConfig(new BodyConfig(
-                ShapeType.RECTANGLE,
-                new Vector2(12.5, -10),
-                new Vector2(12, 1),
-                Math.PI/2,
-                MassType.INFINITE
-        ));
-        ItemConfig persistentItem = new ItemConfig();
-        BodyConfig persistentBody;
+        LevelConfig levelConfig;
         ObjectInputStream objectinputstream = null;
-        try {
-            FileInputStream streamIn = new FileInputStream("test.dat");
-            objectinputstream = new ObjectInputStream(streamIn);
-            persistentBody = (BodyConfig) objectinputstream.readObject();
-//            List<MyClass> readCase = (List<MyClass>) objectinputstream.readObject();
-//            recordList.add(readCase);
-//            System.out.println(recordList.get(i));
-            persistentItem.addBodyConfig(persistentBody);
-            itemConfigs.add(persistentItem);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (objectinputstream != null) {
-                try {
-                    objectinputstream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        FileInputStream streamIn = new FileInputStream(filePath(levelName));
+        objectinputstream = new ObjectInputStream(streamIn);
+        levelConfig = (LevelConfig) objectinputstream.readObject();
 
-        itemConfigs.add(obstacleConfig);
-
-        //Target
-        List<Vector2> target = new ArrayList<>();
-        target.add(new Vector2(20, -25));
-        target.add(new Vector2(25, -31));
-
-        return new LevelConfig(itemConfigs, target);
+        return levelConfig;
     }
 
-    public void saveLevel(String levelName, LevelConfig levelConfig){
-        try (FileOutputStream fos = new FileOutputStream("test.dat");
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-
-            // create a new user object
-            BodyConfig bodyConfig = new BodyConfig(ShapeType.RECTANGLE, new Vector2Serial(5,-5), new Vector2Serial(3, 4), 20, MassType.NORMAL);
-
-            // write object to file
-            oos.writeObject(bodyConfig);
-
+    public void saveLevel(String levelName, LevelConfig levelConfig) {
+        try (FileOutputStream fos = new FileOutputStream(filePath(levelName));
+                ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(levelConfig);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String filePath(String levelName) {
+        return dataDirectoryPath() + "lvl_" + levelName + ".dat";
+    }
+
+    private String dataDirectoryPath() {
+        String directoryName = "levelsData";
+        File directory = new File(directoryName);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        return directoryName + File.separatorChar;
     }
 }

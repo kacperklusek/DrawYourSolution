@@ -15,6 +15,10 @@ public class Vector2Serial implements Serializable {
         this.x = v.x;
         this.y = v.y;
     }
+    public Vector2Serial(Vector2Serial v){
+        this.x = v.x;
+        this.y = v.y;
+    }
     public Vector2 toVector2(){
         return new Vector2(x, y);
     }

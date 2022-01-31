@@ -7,26 +7,34 @@ import Game.configs.ShapeType;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class LevelManager implements ItemCreationListener{
     private final double HEIGHT = 21;
     private final double WIDTH = 27;
 
-//    Simulation simulation = new Simulation();
-    World world;
-    Scheduler scheduler;
-    LevelConfig level;
+    private World world;
+    private Scheduler scheduler;
+    private LevelConfig levelConfig;
+    private List<ItemConfig> addedItems;
 
     public LevelManager() {
         this.world = new World();
         // setting default gravity
         world.setGravity(new Vector2(0., -10.));
         this.scheduler = new Scheduler(world);
+        addedItems = new ArrayList<>();
     }
 
     @Override
     public void itemCreated(ItemConfig itemConfig) {
         // i tu w sumie robie notify Simulation i przekazuje to po prostu dalej? troche bez sensu
         world.addItem(itemConfig);
+        addedItems.add(itemConfig);
         // if simulation is paused => render one frame for item to appear
         scheduler.handle(0);
     }
@@ -44,8 +52,8 @@ public class LevelManager implements ItemCreationListener{
     }
 
     public void loadLevel(LevelConfig levelConfig) {
-        level = levelConfig;
-        for (ItemConfig itemConfig: level.itemConfigs) {
+        this.levelConfig = levelConfig;
+        for (ItemConfig itemConfig: this.levelConfig.itemConfigs) {
             world.addItem(itemConfig);
         }
 //        // fixme
@@ -93,5 +101,11 @@ public class LevelManager implements ItemCreationListener{
         world.addItem(leftWallConfig);
         world.addItem(rightWallConfig);
         scheduler.handle(0);
+    }
+
+    public LevelConfig generateLevelConfig() {
+        return new LevelConfig(Stream.of(levelConfig.itemConfigs, addedItems)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()), levelConfig.target);
     }
 }
