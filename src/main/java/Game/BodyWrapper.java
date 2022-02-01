@@ -34,6 +34,7 @@ import java.util.List;
 
 public class BodyWrapper {
 	private Body body;
+    private Integer targetID;
 
 	// listeners
 	private final List<BodyListener> listeners = new ArrayList<>();
