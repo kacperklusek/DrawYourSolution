@@ -39,7 +39,7 @@ public class BodyWrapper {
 		return targetID;
 	}
 
-	private Integer targetID;
+	private Integer targetID = null;
 
 	// listeners
 	private final List<BodyListener> listeners = new ArrayList<>();
@@ -78,7 +78,7 @@ public class BodyWrapper {
 	}
 
 	private void fireBodyUpdate() {
-		final BodyEvent e = new BodyEvent(getBody(), BodyEvent.Type.BODY_UPDATE);
+		final BodyEvent e = new BodyEvent(getBody(), BodyEvent.Type.BODY_UPDATE, targetID);
 		fireEvent(e);
 	}
 }

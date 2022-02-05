@@ -48,7 +48,7 @@ public class App extends Application {
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
     Persistency persistency = new Persistency();
-	SimpleObjectiveChecker objectiveChecker = new SimpleObjectiveChecker();
+	SimpleObjectiveChecker simpleObjectiveChecker = new SimpleObjectiveChecker();
 
 	@Override
 	public void init() {
@@ -70,9 +70,9 @@ public class App extends Application {
 		levelManager = new LevelManager();
 		BoardGui gui = new BoardGui(root);
 		levelManager.addBoardStateListener(gui);
-		levelManager.addBoardStateListener(objectiveChecker);
+		levelManager.addBoardStateListener(simpleObjectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
-		objectiveChecker.addObjectiveStateListener(levelManager);
+		simpleObjectiveChecker.addObjectiveStateListener(levelManager);
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {

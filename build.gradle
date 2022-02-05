@@ -28,3 +28,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+application {
+    mainClassName = "Game.Main"
+}

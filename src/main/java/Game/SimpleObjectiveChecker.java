@@ -21,6 +21,7 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
     @Override
     public void worldUpdate(WorldEvent e) {
         if (e.getType() == WorldEvent.Type.BODY_ADDED) {
+            // filter which body you want to listen
             e.getBody().addBodyListener(this);
         }
     }
@@ -38,6 +39,12 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
         if (e.getType() == BodyEvent.Type.BODY_UPDATE) {
             Body body = e.getSource();
 
+            Integer targetID = e.getTargetID();
+            if (targetID == null) {
+                return;
+            }
+
+
             Vector2Serial position = new Vector2Serial(new Vector2Serial(body.getTransform().getTranslation()));
             position = new Vector2Serial(position.x, - position.y);
             position = position.add(new Vector2Serial(
@@ -45,6 +52,9 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
                     BoardGui.BOARD_OFFSET.y / BoardGui.SCALE));
 
             for (TargetConfig target: targets) {
+                if (target.ID() != targetID) {
+                    continue;
+                }
                 switch (target.shape()) {
                     case RECTANGLE -> {
                         if (position.follows(target.position()) &&
