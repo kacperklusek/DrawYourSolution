@@ -55,7 +55,7 @@ public class BoardGui implements BoardStateListener {
 	@Override
 	public void worldUpdate(WorldEvent e) {
 		if (e.getType() == WorldEvent.Type.BODY_ADDED) {
-			if (e.getBody().getBody().getFixture(0).getShape() instanceof org.dyn4j.geometry.Rectangle){
+			if (e.getBody().getBody().getFixture(0).getShape() instanceof org.dyn4j.geometry.Rectangle) {
 				Rectangle rectangle = new Rectangle();
 				e.getBody().addBodyListener(rectangle);
 				this.group.getChildren().add(rectangle);

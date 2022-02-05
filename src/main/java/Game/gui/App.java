@@ -27,16 +27,12 @@
 
 package Game.gui;
 
-import Game.ClickHandler;
-import Game.LevelManager;
-import Game.Persistency;
-import Game.Vector2Serial;
+import Game.*;
 import Game.configs.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -46,12 +42,13 @@ import java.util.List;
 
 public class App extends Application {
 
-	private final double SCENE_WIDTH = 1920*0.7;
-	private final double SCENE_HEIGHT = 1080*0.7;
+	public static final double SCENE_WIDTH = 1920*0.7;
+	public static final double SCENE_HEIGHT = 1080*0.7;
 
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
     Persistency persistency = new Persistency();
+	SimpleObjectiveChecker objectiveChecker = new SimpleObjectiveChecker();
 
 	@Override
 	public void init() {
@@ -73,8 +70,10 @@ public class App extends Application {
 		levelManager = new LevelManager();
 		BoardGui gui = new BoardGui(root);
 		levelManager.addBoardStateListener(gui);
+		levelManager.addBoardStateListener(objectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
-		clickHandler.setBoardPosition(levelManager.getHEIGHT(), levelManager.getWIDTH(), BoardGui.BOARD_OFFSET);
+		objectiveChecker.addObjectiveStateListener(levelManager);
+		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
             levelManager.loadLevel(persistency.loadLevel("1"));
@@ -101,7 +100,7 @@ public class App extends Application {
 			constraintConfigs.add( new ConstraintConfig(
 					ShapeType.RECTANGLE,
 					new Vector2Serial(22, 2),
-					new Vector2Serial(5, 16)
+					new Vector2Serial(5, 14.5)
 			));
 
 			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs, constraintConfigs));
@@ -127,5 +126,4 @@ public class App extends Application {
 			}
 		});
 	}
-
 }

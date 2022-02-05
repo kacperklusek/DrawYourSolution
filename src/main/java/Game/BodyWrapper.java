@@ -34,13 +34,23 @@ import java.util.List;
 
 public class BodyWrapper {
 	private Body body;
-    private Integer targetID;
+
+	public Integer getTargetID() {
+		return targetID;
+	}
+
+	private Integer targetID;
 
 	// listeners
 	private final List<BodyListener> listeners = new ArrayList<>();
 
 	public BodyWrapper(Body body) {
 		this.body = body;
+	}
+
+	public BodyWrapper(Body body, Integer targetID) {
+		this.body = body;
+		this.targetID = targetID;
 	}
 
 	public Body getBody() {
