@@ -5,5 +5,5 @@ public interface ObjectiveStatePublisher {
 
     public void removeObjectiveStateListener(ObjectiveListener listener);
 
-    public void notifyObjectiveSatisfied();
+    public void notifyObjectivesSatisfied();
 }

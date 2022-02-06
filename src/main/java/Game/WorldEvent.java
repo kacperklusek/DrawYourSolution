@@ -55,7 +55,7 @@ public class WorldEvent extends EventObject {
 		return (World) super.getSource();
 	}
 
-	public BodyWrapper getBody() {
+	public BodyWrapper getBodyWrapper() {
 		return this.body;
 	}
 

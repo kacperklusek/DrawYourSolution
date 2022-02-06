@@ -1,38 +1,20 @@
 package Game;
 
-import Game.configs.ConstraintConfig;
 import Game.configs.TargetConfig;
 import Game.gui.BoardGui;
-import Game.gui.Rectangle;
-import jdk.swing.interop.DispatcherWrapper;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.geometry.Vector2;
-import org.dyn4j.world.listener.BoundsListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleObjectiveChecker implements BoardStateListener, BodyListener, ObjectiveStatePublisher{
-    List<ObjectiveListener> objectiveListeners = new ArrayList<>();
+public class SimpleObjectiveChecker implements BodyListener, SimpleObjectivePublisher{
+    List<SimpleObjectiveListener> objectiveListeners = new ArrayList<>();
 
-    List<TargetConfig> targets = new ArrayList<>();
-//    List<BodyWrapper> trackedBodies = new ArrayList<>();
+    TargetConfig targetConfig;
 
-    @Override
-    public void worldUpdate(WorldEvent e) {
-        if (e.getType() == WorldEvent.Type.BODY_ADDED) {
-            // filter which body you want to listen
-            e.getBody().addBodyListener(this);
-        }
+    public SimpleObjectiveChecker(TargetConfig targetConfig) {
+        this.targetConfig = targetConfig;
     }
-
-    @Override
-    public void targetAdded(TargetConfig targetConfig) {
-        targets.add(targetConfig);
-    }
-
-    @Override
-    public void constraintAdded(ConstraintConfig constraintConfig) {}
 
     @Override
     public void bodyUpdate(BodyEvent e) {
@@ -41,9 +23,9 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
 
             Integer targetID = e.getTargetID();
             if (targetID == null) {
+                System.out.println("should have target id but does not have");
                 return;
             }
-
 
             Vector2Serial position = new Vector2Serial(new Vector2Serial(body.getTransform().getTranslation()));
             position = new Vector2Serial(position.x, - position.y);
@@ -51,21 +33,20 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
                     BoardGui.BOARD_OFFSET.x / BoardGui.SCALE,
                     BoardGui.BOARD_OFFSET.y / BoardGui.SCALE));
 
-            for (TargetConfig target: targets) {
-                if (target.ID() != targetID) {
-                    continue;
-                }
-                switch (target.shape()) {
-                    case RECTANGLE -> {
-                        if (position.follows(target.position()) &&
-                            position.precedes(target.position().add(target.size()))) {
-                                notifyObjectiveSatisfied();
-                            }
-                    }
-                    case CIRCLE -> {
-                        if (position.distance(target.position()) <= target.size().x) {
+            if (targetConfig.ID() != targetID) {
+                System.out.println("Bad target ID!");
+                return;
+            }
+            switch (targetConfig.shape()) {
+                case RECTANGLE -> {
+                    if (position.follows(targetConfig.position()) &&
+                        position.precedes(targetConfig.position().add(targetConfig.size()))) {
                             notifyObjectiveSatisfied();
                         }
+                }
+                case CIRCLE -> {
+                    if (position.distance(targetConfig.position()) <= targetConfig.size().x) {
+                        notifyObjectiveSatisfied();
                     }
                 }
             }
@@ -73,19 +54,19 @@ public class SimpleObjectiveChecker implements BoardStateListener, BodyListener,
     }
 
     @Override
-    public void addObjectiveStateListener(ObjectiveListener listener) {
+    public void addSimpleObjectiveListener(SimpleObjectiveListener listener) {
         this.objectiveListeners.add(listener);
     }
 
     @Override
-    public void removeObjectiveStateListener(ObjectiveListener listener) {
+    public void removeSimpleObjectiveListener(SimpleObjectiveListener listener) {
         this.objectiveListeners.remove(listener);
     }
 
     @Override
     public void notifyObjectiveSatisfied() {
-        for (ObjectiveListener listener: objectiveListeners) {
-            listener.objectiveSatisfied();
+        for (SimpleObjectiveListener listener: objectiveListeners) {
+            listener.simpleObjectiveSatisfied(targetConfig.ID());
         }
     }
 }

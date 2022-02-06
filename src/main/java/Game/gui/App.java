@@ -48,7 +48,7 @@ public class App extends Application {
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
     Persistency persistency = new Persistency();
-	SimpleObjectiveChecker simpleObjectiveChecker = new SimpleObjectiveChecker();
+	ObjectiveChecker objectiveChecker = new ObjectiveChecker();
 
 	@Override
 	public void init() {
@@ -70,23 +70,15 @@ public class App extends Application {
 		levelManager = new LevelManager();
 		BoardGui gui = new BoardGui(root);
 		levelManager.addBoardStateListener(gui);
-		levelManager.addBoardStateListener(simpleObjectiveChecker);
+		levelManager.addBoardStateListener(objectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
-		simpleObjectiveChecker.addObjectiveStateListener(levelManager);
+		objectiveChecker.addObjectiveStateListener(levelManager);
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
-            levelManager.loadLevel(persistency.loadLevel("1"));
+            levelManager.loadLevel(persistency.loadLevel("2"));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
-			ItemConfig defaultCircle = new ItemConfig();
-            defaultCircle.addBodyConfig(new BodyConfig(
-                    ShapeType.CIRCLE,
-                    new Vector2(5, -5),
-                    new Vector2(2, 2),
-                    0,
-                    MassType.INFINITE
-            ));
 			ItemConfig objectiveCircle = new ItemConfig();
 			objectiveCircle.addBodyConfig(new BodyConfig(
                     ShapeType.CIRCLE,
@@ -96,15 +88,30 @@ public class App extends Application {
                     MassType.NORMAL,
 					0
             ));
+			ItemConfig objectiveCircle2 = new ItemConfig();
+			objectiveCircle2.addBodyConfig(new BodyConfig(
+					ShapeType.CIRCLE,
+					new Vector2(13, -8),
+					new Vector2(1, 1),
+					0,
+					MassType.NORMAL,
+					1		));
             List<ItemConfig> itemList = new ArrayList<>();
-            itemList.add(defaultCircle);
 			itemList.add(objectiveCircle);
+			itemList.add(objectiveCircle2);
+
 			List<TargetConfig> targetConfigs = new ArrayList<>();
 			targetConfigs.add(new TargetConfig(
 					ShapeType.RECTANGLE,
 					new Vector2Serial(22, 17),
 					new Vector2Serial(5, 5),
 					0
+			));
+			targetConfigs.add(new TargetConfig(
+					ShapeType.RECTANGLE,
+					new Vector2Serial(12, 17),
+					new Vector2Serial(5, 5),
+					1
 			));
 			List<ConstraintConfig> constraintConfigs = new ArrayList<>();
 			constraintConfigs.add( new ConstraintConfig(
@@ -132,7 +139,7 @@ public class App extends Application {
 				case R -> start(primaryStage);
 				case P -> levelManager.stopSimulation();
 				case L -> levelManager.startSimulation();
-                case S -> persistency.saveLevel("1", levelManager.generateLevelConfig());
+                case S -> persistency.saveLevel("2", levelManager.generateLevelConfig());
 			}
 		});
 	}

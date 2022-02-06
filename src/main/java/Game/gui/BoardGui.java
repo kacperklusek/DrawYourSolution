@@ -34,8 +34,6 @@ import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape;
-import org.dyn4j.geometry.Vector2;
 
 public class BoardGui implements BoardStateListener {
 	public static final int SCALE = 32;
@@ -55,14 +53,14 @@ public class BoardGui implements BoardStateListener {
 	@Override
 	public void worldUpdate(WorldEvent e) {
 		if (e.getType() == WorldEvent.Type.BODY_ADDED) {
-			if (e.getBody().getBody().getFixture(0).getShape() instanceof org.dyn4j.geometry.Rectangle) {
+			if (e.getBodyWrapper().getBody().getFixture(0).getShape() instanceof org.dyn4j.geometry.Rectangle) {
 				Rectangle rectangle = new Rectangle();
-				e.getBody().addBodyListener(rectangle);
+				e.getBodyWrapper().addBodyListener(rectangle);
 				this.group.getChildren().add(rectangle);
 			}
 			else {
 				Circle circle = new Circle();
-				e.getBody().addBodyListener(circle);
+				e.getBodyWrapper().addBodyListener(circle);
 				this.group.getChildren().add(circle);
 			}
 		}
