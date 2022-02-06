@@ -33,23 +33,24 @@ import Game.configs.ShapeType;
 import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 
 public class BoardGui implements BoardStateListener {
 	public static final int SCALE = 32;
     public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.4*SCALE);
+	private final List<ButtonsListener> buttonsListeners = new ArrayList<>();
 
 	Group group;
 
 	public BoardGui(Group group) {
 		this.group = group;
-		Button startButton = new Button("start");
-		startButton.setOnAction(event -> {
-			// do sth
-		});
-		this.group.getChildren().add(startButton);
+		initializeButtons();
 	}
 
 	@Override
@@ -114,5 +115,43 @@ public class BoardGui implements BoardStateListener {
 			return Color.DARKGRAY;
 		}
 		return Color.hsb((100+targetID*((360-60)/9.0 + 15))%(360-60)+30, 1, 0.7, isTarget ? 0.5 : 1.0);
+	}
+
+	public void addButtonListener(ButtonsListener listener) {
+		buttonsListeners.add(listener);
+	}
+
+	private void initializeButtons() {
+		HBox buttonsContainer = new HBox();
+		Button startButton = new Button("start (L)");
+		startButton.setOnAction(event -> {
+			for(ButtonsListener listener: buttonsListeners) {
+				listener.handleStart();
+			}
+		});
+		Button stopButton = new Button("stop (P)");
+		stopButton.setOnAction(event -> {
+			for(ButtonsListener listener: buttonsListeners) {
+				listener.handleStop();
+			}
+		});
+		Button saveButton = new Button("save level config (S)");
+		saveButton.setOnAction(event -> {
+			for(ButtonsListener listener: buttonsListeners) {
+				listener.handleSave();
+			}
+		});
+		Button resetButton = new Button("RESET (R)");
+		resetButton.setOnAction(event -> {
+			for(ButtonsListener listener: buttonsListeners) {
+				listener.handleReset();
+			}
+		});
+		buttonsContainer.getChildren().add(startButton);
+		buttonsContainer.getChildren().add(stopButton);
+		buttonsContainer.getChildren().add(saveButton);
+		buttonsContainer.getChildren().add(resetButton);
+
+		this.group.getChildren().add(buttonsContainer);
 	}
 }

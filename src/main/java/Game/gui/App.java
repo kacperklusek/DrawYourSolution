@@ -38,11 +38,12 @@ import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 import org.w3c.dom.UserDataHandler;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class App extends Application {
+public class App extends Application implements ButtonsListener {
 
 	public static final double SCENE_WIDTH = 1920*0.7;
 	public static final double SCENE_HEIGHT = 1080*0.7;
@@ -51,6 +52,8 @@ public class App extends Application {
 	LevelManager levelManager;
     Persistency persistency;
 	ObjectiveChecker objectiveChecker;
+
+	Stage primaryStage;
 
 	@Override
 	public void init() {
@@ -61,6 +64,7 @@ public class App extends Application {
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("DrawYourSolution");
 		primaryStage.sizeToScene();
+		this.primaryStage = primaryStage;
 
 		clickHandler = new ClickHandler();
 		persistency = new Persistency();
@@ -74,10 +78,15 @@ public class App extends Application {
 		// Creating the world
 		levelManager = new LevelManager();
 		BoardGui gui = new BoardGui(root);
+
+		// add Listeners
+		gui.addButtonListener(this);
 		levelManager.addBoardStateListener(gui);
 		levelManager.addBoardStateListener(objectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
 		objectiveChecker.addObjectiveStateListener(levelManager);
+
+
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
@@ -107,5 +116,25 @@ public class App extends Application {
                 case S -> persistency.saveLevel("trampoline", levelManager.generateLevelConfig());
 			}
 		});
+	}
+
+	@Override
+	public void handleStart() {
+		levelManager.startSimulation();
+	}
+
+	@Override
+	public void handleStop() {
+		levelManager.stopSimulation();
+	}
+
+	@Override
+	public void handleReset() {
+		this.start(primaryStage);
+	}
+
+	@Override
+	public void handleSave() {
+		persistency.saveLevel("trampoline", levelManager.generateLevelConfig());
 	}
 }
