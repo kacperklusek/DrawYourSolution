@@ -79,7 +79,7 @@ public class App extends Application {
             levelManager.loadLevel(persistency.loadLevel("1"));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
-            ItemConfig defaultCircle = new ItemConfig();
+			ItemConfig defaultCircle = new ItemConfig();
             defaultCircle.addBodyConfig(new BodyConfig(
                     ShapeType.CIRCLE,
                     new Vector2(5, -5),
@@ -87,8 +87,18 @@ public class App extends Application {
                     0,
                     MassType.INFINITE
             ));
+			ItemConfig objectiveCircle = new ItemConfig();
+			objectiveCircle.addBodyConfig(new BodyConfig(
+                    ShapeType.CIRCLE,
+                    new Vector2(8, -8),
+                    new Vector2(1, 1),
+                    0,
+                    MassType.NORMAL,
+					0
+            ));
             List<ItemConfig> itemList = new ArrayList<>();
             itemList.add(defaultCircle);
+			itemList.add(objectiveCircle);
 			List<TargetConfig> targetConfigs = new ArrayList<>();
 			targetConfigs.add(new TargetConfig(
 					ShapeType.RECTANGLE,
@@ -108,7 +118,7 @@ public class App extends Application {
 		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 
         // start simulation
-		levelManager.startSimulation();
+//		levelManager.startSimulation();
 		primaryStage.show();
 
 		// clickHandler

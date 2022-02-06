@@ -54,11 +54,11 @@ public class World extends org.dyn4j.world.World implements BoardStatePublisher{
 	}
 
 	public void addItem(ItemConfig itemConfig) {
-		List<Body> bodies = itemConfigParser.parseBodies(itemConfig);
+		List<BodyWrapper> bodies = itemConfigParser.parseBodies(itemConfig);
 		List<Joint<Body>> joints = itemConfigParser.parseJoints(bodies, itemConfig.jointType);
 
-		for (Body body: bodies) {
-			addBody(body);
+		for (BodyWrapper bodyWrapper: bodies) {
+			addBody(bodyWrapper);
 		}
 		for (Joint<Body> joint: joints) {
 			super.addJoint(joint);
@@ -66,9 +66,8 @@ public class World extends org.dyn4j.world.World implements BoardStatePublisher{
 
 	}
 
-	public void addBody(Body newBody) {
-		super.addBody(newBody);
-		BodyWrapper bodyWrapper = new BodyWrapper(newBody);
+	public void addBody(BodyWrapper bodyWrapper) {
+		super.addBody(bodyWrapper.getBody());
 		this.bodies.add(bodyWrapper);
 		fireBodyAdded(bodyWrapper);
 	}
