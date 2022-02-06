@@ -33,8 +33,10 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.dyn4j.dynamics.joint.Joint;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
+import org.w3c.dom.UserDataHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,9 +81,29 @@ public class App extends Application {
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
-            levelManager.loadLevel(persistency.loadLevel("2"));
+            levelManager.loadLevel(persistency.loadLevel("trampoline"));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
+
+			ItemConfig trampoline = new ItemConfig();
+			BodyConfig circle = new BodyConfig(
+					ShapeType.CIRCLE,
+					new Vector2(3, -13),
+					new Vector2(1, 1),
+					0,
+					MassType.INFINITE
+			);
+			BodyConfig plank = new BodyConfig(
+					ShapeType.RECTANGLE,
+					new Vector2(5, -14),
+					new Vector2(6, 0.1),
+					Math.toDegrees(Math.PI/20),
+					MassType.NORMAL
+			);
+			trampoline.addBodyConfig(circle);
+			trampoline.addBodyConfig(plank);
+			trampoline.setJointType(JointType.SPRING);
+
 			ItemConfig objectiveCircle = new ItemConfig();
 			objectiveCircle.addBodyConfig(new BodyConfig(
                     ShapeType.CIRCLE,
@@ -113,6 +135,7 @@ public class App extends Application {
 			itemList.add(objectiveCircle);
 			itemList.add(objectiveCircle2);
 			itemList.add(objectiveCircle3);
+			itemList.add(trampoline);
 
 			List<TargetConfig> targetConfigs = new ArrayList<>();
 			targetConfigs.add(new TargetConfig(
@@ -132,6 +155,11 @@ public class App extends Application {
 					ShapeType.RECTANGLE,
 					new Vector2Serial(22, 2),
 					new Vector2Serial(5, 14.5)
+			));
+			constraintConfigs.add( new ConstraintConfig(
+					ShapeType.RECTANGLE,
+					new Vector2Serial(10, 12),
+					new Vector2Serial(9, 7)
 			));
 
 			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs, constraintConfigs));
@@ -153,7 +181,7 @@ public class App extends Application {
 				case R -> start(primaryStage);
 				case P -> levelManager.stopSimulation();
 				case L -> levelManager.startSimulation();
-                case S -> persistency.saveLevel("2", levelManager.generateLevelConfig());
+                case S -> persistency.saveLevel("trampoline", levelManager.generateLevelConfig());
 			}
 		});
 	}

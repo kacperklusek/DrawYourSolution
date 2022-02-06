@@ -1,6 +1,7 @@
 package Game.configs;
 
 import Game.BodyWrapper;
+import com.sun.source.tree.BreakTree;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.joint.Joint;
@@ -50,14 +51,27 @@ public class ItemConfigParser {
         for (int i = 1; i < bodies.size(); i++) {
             body1 = bodies.get(i-1).getBody();
             body2 = bodies.get(i).getBody();
-            Joint<Body> joint = switch (jointType) {
-                case WELD -> new WeldJoint<Body>(body1,
-                        body2,
-                        getPosition(body1));
-                case REVOLUTE -> new RevoluteJoint<>(body1,
-                        body2,
-                        getPosition(body1, body2));
-            };
+            Joint<Body> joint;
+            switch (jointType) {
+                case SPRING -> {
+                    WeldJoint<Body> jnt = new WeldJoint<>(body1,
+                            body2,
+                            getPosition(body1));
+                    jnt.setFrequency(80);
+                    joint = jnt;
+                }
+                case REVOLUTE -> {
+                    joint = new RevoluteJoint<>(body1,
+                            body2,
+                            getPosition(body1));
+                }
+//                case WELD -> {
+                default -> {
+                    joint = new WeldJoint<>(body1,
+                            body2,
+                            getPosition(body1));
+                }
+            }
             joints.add(joint);
         }
         return joints;
