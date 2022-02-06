@@ -45,10 +45,10 @@ public class App extends Application {
 	public static final double SCENE_WIDTH = 1920*0.7;
 	public static final double SCENE_HEIGHT = 1080*0.7;
 
-	ClickHandler clickHandler = new ClickHandler();
+	ClickHandler clickHandler;
 	LevelManager levelManager;
-    Persistency persistency = new Persistency();
-	ObjectiveChecker objectiveChecker = new ObjectiveChecker();
+    Persistency persistency;
+	ObjectiveChecker objectiveChecker;
 
 	@Override
 	public void init() {
@@ -60,6 +60,9 @@ public class App extends Application {
 		primaryStage.setTitle("DrawYourSolution");
 		primaryStage.sizeToScene();
 
+		clickHandler = new ClickHandler();
+		persistency = new Persistency();
+		objectiveChecker = new ObjectiveChecker();
 
 		// setup scene
 		Group root = new Group();
