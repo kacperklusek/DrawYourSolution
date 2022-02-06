@@ -35,6 +35,8 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 
+import static java.util.Objects.isNull;
+
 public class BoardGui implements BoardStateListener {
 	public static final int SCALE = 32;
     public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.4*SCALE);
@@ -72,7 +74,7 @@ public class BoardGui implements BoardStateListener {
 			targetConfig.shape(),
 			targetConfig.position(),
 			targetConfig.size(),
-			Color.GREEN
+			colorFromTargetID(targetConfig.ID(), true)
 		);
 	}
 
@@ -105,5 +107,12 @@ public class BoardGui implements BoardStateListener {
 				shape.setFill(color);
 			}
 		}
+	}
+
+	public static Color colorFromTargetID(Integer targetID, boolean isTarget){
+		if(isNull(targetID)){
+			return Color.DARKGRAY;
+		}
+		return Color.hsb((100+targetID*((360-60)/9.0 + 15))%(360-60)+30, 1, 0.7, isTarget ? 0.5 : 1.0);
 	}
 }

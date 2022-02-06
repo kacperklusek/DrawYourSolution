@@ -24,6 +24,7 @@ public class Circle extends javafx.scene.shape.Circle implements BodyListener {
     @Override
     public void bodyUpdate(BodyEvent e) {
         if (e.getType() == BodyEvent.Type.BODY_UPDATE) {
+            setFill(BoardGui.colorFromTargetID(e.getTargetID(), false));
             Body body = e.getSource();
 
             Vector2 position = body.getWorldCenter();
