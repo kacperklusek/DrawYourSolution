@@ -27,16 +27,12 @@
 
 package Game.gui;
 
-import Game.ClickHandler;
-import Game.LevelManager;
-import Game.Persistency;
-import Game.Vector2Serial;
+import Game.*;
 import Game.configs.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -46,12 +42,13 @@ import java.util.List;
 
 public class App extends Application {
 
-	private final double SCENE_WIDTH = 1920*0.7;
-	private final double SCENE_HEIGHT = 1080*0.7;
+	public static final double SCENE_WIDTH = 1920*0.7;
+	public static final double SCENE_HEIGHT = 1080*0.7;
 
 	ClickHandler clickHandler = new ClickHandler();
 	LevelManager levelManager;
     Persistency persistency = new Persistency();
+	ObjectiveChecker objectiveChecker = new ObjectiveChecker();
 
 	@Override
 	public void init() {
@@ -73,23 +70,47 @@ public class App extends Application {
 		levelManager = new LevelManager();
 		BoardGui gui = new BoardGui(root);
 		levelManager.addBoardStateListener(gui);
+		levelManager.addBoardStateListener(objectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
-		clickHandler.setBoardPosition(levelManager.getHEIGHT(), levelManager.getWIDTH(), BoardGui.BOARD_OFFSET);
+		objectiveChecker.addObjectiveStateListener(levelManager);
+		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
-            levelManager.loadLevel(persistency.loadLevel("1"));
+            levelManager.loadLevel(persistency.loadLevel("2"));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
-            ItemConfig defaultCircle = new ItemConfig();
-            defaultCircle.addBodyConfig(new BodyConfig(
+			ItemConfig objectiveCircle = new ItemConfig();
+			objectiveCircle.addBodyConfig(new BodyConfig(
                     ShapeType.CIRCLE,
-                    new Vector2(5, -5),
-                    new Vector2(2, 2),
+                    new Vector2(8, -8),
+                    new Vector2(1, 1),
                     0,
-                    MassType.INFINITE
+                    MassType.NORMAL,
+					0
             ));
+			ItemConfig objectiveCircle2 = new ItemConfig();
+			objectiveCircle2.addBodyConfig(new BodyConfig(
+					ShapeType.CIRCLE,
+					new Vector2(13, -8),
+					new Vector2(1, 1),
+					0,
+					MassType.NORMAL,
+					0
+			));
+			ItemConfig objectiveCircle3 = new ItemConfig();
+			objectiveCircle3.addBodyConfig(new BodyConfig(
+					ShapeType.CIRCLE,
+					new Vector2(11, -8),
+					new Vector2(1, 1),
+					0,
+					MassType.NORMAL,
+					1
+			));
             List<ItemConfig> itemList = new ArrayList<>();
-            itemList.add(defaultCircle);
+			itemList.add(objectiveCircle);
+			itemList.add(objectiveCircle2);
+			itemList.add(objectiveCircle3);
+
 			List<TargetConfig> targetConfigs = new ArrayList<>();
 			targetConfigs.add(new TargetConfig(
 					ShapeType.RECTANGLE,
@@ -97,11 +118,17 @@ public class App extends Application {
 					new Vector2Serial(5, 5),
 					0
 			));
+			targetConfigs.add(new TargetConfig(
+					ShapeType.RECTANGLE,
+					new Vector2Serial(12, 17),
+					new Vector2Serial(5, 5),
+					1
+			));
 			List<ConstraintConfig> constraintConfigs = new ArrayList<>();
 			constraintConfigs.add( new ConstraintConfig(
 					ShapeType.RECTANGLE,
 					new Vector2Serial(22, 2),
-					new Vector2Serial(5, 16)
+					new Vector2Serial(5, 14.5)
 			));
 
 			levelManager.loadLevel(new LevelConfig(itemList, targetConfigs, constraintConfigs));
@@ -109,7 +136,7 @@ public class App extends Application {
 		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 
         // start simulation
-		levelManager.startSimulation();
+//		levelManager.startSimulation();
 		primaryStage.show();
 
 		// clickHandler
@@ -123,9 +150,8 @@ public class App extends Application {
 				case R -> start(primaryStage);
 				case P -> levelManager.stopSimulation();
 				case L -> levelManager.startSimulation();
-                case S -> persistency.saveLevel("1", levelManager.generateLevelConfig());
+                case S -> persistency.saveLevel("2", levelManager.generateLevelConfig());
 			}
 		});
 	}
-
 }

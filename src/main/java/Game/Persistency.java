@@ -13,10 +13,7 @@ import java.util.List;
 
 public class Persistency {
 
-
-    //  dopóki nie mamy persystencji na dysku tworze jakiś basic level
     public LevelConfig loadLevel(String levelName) throws IOException, ClassNotFoundException {
-
         LevelConfig levelConfig;
         ObjectInputStream objectinputstream = null;
         FileInputStream streamIn = new FileInputStream(filePath(levelName));

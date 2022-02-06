@@ -1,5 +1,6 @@
 package Game.configs;
 
+import Game.BodyWrapper;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.joint.Joint;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class ItemConfigParser {
 
-    public List<Body> parseBodies(ItemConfig itemConfig) {
-        List<Body> bodiesList = new ArrayList<>();
+    public List<BodyWrapper> parseBodies(ItemConfig itemConfig) {
+        List<BodyWrapper> bodiesList = new ArrayList<>();
         for (BodyConfig bodyConfig: itemConfig.bodyConfigs) {
             BodyFixture bodyFixture = getBodyFixture(bodyConfig.shape(), bodyConfig.size().toVector2());
 
@@ -28,8 +29,9 @@ public class ItemConfigParser {
             body.translate(bodyConfig.position().x, bodyConfig.position().y);
             body.getTransform().setRotation(bodyConfig.rotation());
 
+            BodyWrapper bodyWrapper = new BodyWrapper(body, bodyConfig.targetID());
 
-            bodiesList.add(body);
+            bodiesList.add(bodyWrapper);
         }
         return bodiesList;
     }
@@ -41,13 +43,13 @@ public class ItemConfigParser {
         };
     }
 
-    public List<Joint<Body>> parseJoints(List<Body> bodies, JointType jointType) {
+    public List<Joint<Body>> parseJoints(List<BodyWrapper> bodies, JointType jointType) {
         Body body1, body2;
         List<Joint<Body>> joints = new ArrayList<>();
 
         for (int i = 1; i < bodies.size(); i++) {
-            body1 = bodies.get(i-1);
-            body2 = bodies.get(i);
+            body1 = bodies.get(i-1).getBody();
+            body2 = bodies.get(i).getBody();
             Joint<Body> joint = switch (jointType) {
                 case WELD -> new WeldJoint<Body>(body1,
                         body2,

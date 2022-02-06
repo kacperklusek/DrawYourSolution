@@ -10,17 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class LevelManager implements ItemCreationListener, BoardStatePublisher{
-    public double getHEIGHT() {
-        return HEIGHT;
-    }
+public class LevelManager implements ItemCreationListener, BoardStatePublisher, ObjectiveListener{
 
-    public double getWIDTH() {
-        return WIDTH;
-    }
-
-    private final double HEIGHT = 21;
-    private final double WIDTH = 27;
+    public final double HEIGHT = 21;
+    public final double WIDTH = 27;
 
     private World world;
     private Scheduler scheduler;
@@ -155,5 +148,11 @@ public class LevelManager implements ItemCreationListener, BoardStatePublisher{
         for(BoardStateListener listener: listeners) {
             listener.constraintAdded(constraintConfig);
         }
+    }
+
+    @Override
+    public void objectiveSatisfied() {
+        System.out.println("OBJECTIVE SATISFIED!");
+        stopSimulation();
     }
 }

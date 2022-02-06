@@ -41,4 +41,6 @@ public record BodyConfig(
         this(shape, position, size, rotation, massType, null);
     }
 
+
+
 }

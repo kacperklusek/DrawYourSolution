@@ -4,7 +4,6 @@ import Game.configs.*;
 import Game.gui.BoardGui;
 import javafx.scene.input.MouseButton;
 import org.dyn4j.geometry.*;
-import org.dyn4j.world.listener.BoundsListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +61,7 @@ public class ClickHandler {
     }
 
     private boolean isInConstraint(double x, double y) {
-        Vector2Serial v = new Vector2Serial(x, y);
+        Vector2Serial v = new Vector2Serial(x/BoardGui.SCALE, y/BoardGui.SCALE);
         for(ConstraintConfig con: constraintConfigs) {
             switch (con.shape()){
                 case RECTANGLE -> {
@@ -81,6 +80,11 @@ public class ClickHandler {
     }
 
     private void handleSECONDARY(double x, double y) {
+        Vector2 v = new Vector2((x - BoardGui.BOARD_OFFSET.x) / BoardGui.SCALE,
+                           (-y + BoardGui.BOARD_OFFSET.y) / BoardGui.SCALE);
+
+        System.out.println(v.x + "  " + v.y);
+
         ItemConfig itemConfig = new ItemConfig();
 
         // create ball bodyConfig
@@ -88,7 +92,7 @@ public class ClickHandler {
                 ShapeType.CIRCLE,
                 new Vector2((x - BoardGui.BOARD_OFFSET.x) / BoardGui.SCALE,
                            (-y + BoardGui.BOARD_OFFSET.y) / BoardGui.SCALE),
-                new Vector2(2, 2), // dla circle radius będzie jedną ze współrzędnych
+                new Vector2(1, 1), // dla circle radius będzie jedną ze współrzędnych
                 0,
                 MassType.NORMAL
         );
@@ -111,7 +115,7 @@ public class ClickHandler {
         }
     }
 
-    public void setBoardPosition(double width, double height, Vector2Serial offset) {
+    public void setBoardDimensions(double width, double height, Vector2Serial offset) {
         upperLeft = new Vector2Serial(0, 0).add(offset);
         lowerRight = new Vector2Serial(width * BoardGui.SCALE, height * BoardGui.SCALE).add(offset);
     }

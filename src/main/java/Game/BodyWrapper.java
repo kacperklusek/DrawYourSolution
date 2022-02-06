@@ -31,15 +31,27 @@ import org.dyn4j.dynamics.Body;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BodyWrapper {
 	private Body body;
+
+	public Integer getTargetID() {
+		return targetID;
+	}
+
+	private Integer targetID = null;
 
 	// listeners
 	private final List<BodyListener> listeners = new ArrayList<>();
 
 	public BodyWrapper(Body body) {
 		this.body = body;
+	}
+
+	public BodyWrapper(Body body, Integer targetID) {
+		this.body = body;
+		this.targetID = targetID;
 	}
 
 	public Body getBody() {
@@ -67,7 +79,20 @@ public class BodyWrapper {
 	}
 
 	private void fireBodyUpdate() {
-		final BodyEvent e = new BodyEvent(getBody(), BodyEvent.Type.BODY_UPDATE);
+		final BodyEvent e = new BodyEvent(getBody(), BodyEvent.Type.BODY_UPDATE, targetID);
 		fireEvent(e);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof BodyWrapper)) return false;
+		BodyWrapper that = (BodyWrapper) o;
+		return body.equals(that.body);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(body);
 	}
 }

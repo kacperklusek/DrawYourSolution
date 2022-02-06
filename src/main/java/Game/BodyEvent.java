@@ -38,9 +38,16 @@ public class BodyEvent extends EventObject {
 
 	private final Type eventType;
 
-	public BodyEvent(Body source, Type eventType) {
+	public Integer getTargetID() {
+		return targetID;
+	}
+
+	private final Integer targetID;
+
+	public BodyEvent(Body source, Type eventType, Integer targetID) {
 		super(source);
 		this.eventType = eventType;
+		this.targetID = targetID;
 	}
 
 	@Override
