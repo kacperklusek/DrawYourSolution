@@ -84,7 +84,7 @@ public class BoardGui implements BoardStateListener {
 				constraintConfig.shape(),
 				constraintConfig.position(),
 				constraintConfig.size(),
-				Color.LIGHTBLUE
+				Color.hsb(0, 1, 0.9, 0.3)
 		);
 	}
 
