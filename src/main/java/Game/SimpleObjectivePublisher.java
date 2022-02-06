@@ -6,4 +6,6 @@ public interface SimpleObjectivePublisher {
     public void removeSimpleObjectiveListener(SimpleObjectiveListener listener);
 
     public void notifyObjectiveSatisfied();
+
+    public void notifyObjectiveNotSatisfied();
 }

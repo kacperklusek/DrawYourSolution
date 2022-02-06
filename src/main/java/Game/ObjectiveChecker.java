@@ -71,18 +71,29 @@ public class ObjectiveChecker implements BoardStateListener, ObjectiveStatePubli
         }
     }
 
-    public void addTrackedBody(BodyWrapper bodyWrapper) {
+    private void addTrackedBody(BodyWrapper bodyWrapper) {
         if (! trackedBodies.containsValue(bodyWrapper.getTargetID())){
             trackedBodies.put(bodyWrapper.getTargetID(), new ArrayList<>());
         }
         trackedBodies.get(bodyWrapper.getTargetID()).add(bodyWrapper);
+        updateObjectiveCheckers(bodyWrapper);
+    }
+
+    private void updateObjectiveCheckers(BodyWrapper bodyWrapper) {
+        for(SimpleObjectiveChecker simpleOC: simpleObjectiveCheckers.get(bodyWrapper.getTargetID())) {
+            simpleOC.addTrackedBody(bodyWrapper);
+        }
     }
 
     @Override
     public void simpleObjectiveSatisfied(Integer id) {
         simpleObjectiveStates.put(id, true);
-        System.out.println(id);
         checkObjectives();
+    }
+
+    @Override
+    public void simpleObjectiveNotSatisfied(Integer id) {
+        simpleObjectiveStates.put(id, false);
     }
 
     private void checkObjectives() {

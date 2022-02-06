@@ -95,10 +95,21 @@ public class App extends Application {
 					new Vector2(1, 1),
 					0,
 					MassType.NORMAL,
-					1		));
+					0
+			));
+			ItemConfig objectiveCircle3 = new ItemConfig();
+			objectiveCircle3.addBodyConfig(new BodyConfig(
+					ShapeType.CIRCLE,
+					new Vector2(11, -8),
+					new Vector2(1, 1),
+					0,
+					MassType.NORMAL,
+					1
+			));
             List<ItemConfig> itemList = new ArrayList<>();
 			itemList.add(objectiveCircle);
 			itemList.add(objectiveCircle2);
+			itemList.add(objectiveCircle3);
 
 			List<TargetConfig> targetConfigs = new ArrayList<>();
 			targetConfigs.add(new TargetConfig(
