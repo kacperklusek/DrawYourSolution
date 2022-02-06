@@ -134,7 +134,7 @@ public class App extends Application implements ButtonsListener {
 	}
 
 	@Override
-	public void handleSave() {
-		persistency.saveLevel("trampoline", levelManager.generateLevelConfig());
+	public void handleSave(String levelName) {
+		persistency.saveLevel(levelName, levelManager.generateLevelConfig());
 	}
 }

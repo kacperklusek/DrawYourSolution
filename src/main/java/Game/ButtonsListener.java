@@ -7,5 +7,5 @@ public interface ButtonsListener {
 
     public void handleReset();
 
-    public void handleSave();
+    public void handleSave(String levelName);
 }

@@ -33,8 +33,11 @@ import Game.configs.ShapeType;
 import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +50,15 @@ public class BoardGui implements BoardStateListener {
 	private final List<ButtonsListener> buttonsListeners = new ArrayList<>();
 
 	Group group;
+	HBox userInputContainer;
+	TextField levelNameInput;
 
 	public BoardGui(Group group) {
 		this.group = group;
+		this.userInputContainer = new HBox();
+		this.group.getChildren().add(userInputContainer);
 		initializeButtons();
+		initializeTextInput();
 	}
 
 	@Override
@@ -122,7 +130,6 @@ public class BoardGui implements BoardStateListener {
 	}
 
 	private void initializeButtons() {
-		HBox buttonsContainer = new HBox();
 		Button startButton = new Button("start (L)");
 		startButton.setOnAction(event -> {
 			for(ButtonsListener listener: buttonsListeners) {
@@ -138,7 +145,7 @@ public class BoardGui implements BoardStateListener {
 		Button saveButton = new Button("save level config (S)");
 		saveButton.setOnAction(event -> {
 			for(ButtonsListener listener: buttonsListeners) {
-				listener.handleSave();
+				listener.handleSave(levelNameInput.getText());
 			}
 		});
 		Button resetButton = new Button("RESET (R)");
@@ -147,11 +154,18 @@ public class BoardGui implements BoardStateListener {
 				listener.handleReset();
 			}
 		});
-		buttonsContainer.getChildren().add(startButton);
-		buttonsContainer.getChildren().add(stopButton);
-		buttonsContainer.getChildren().add(saveButton);
-		buttonsContainer.getChildren().add(resetButton);
-
-		this.group.getChildren().add(buttonsContainer);
+		userInputContainer.getChildren().add(startButton);
+		userInputContainer.getChildren().add(stopButton);
+		userInputContainer.getChildren().add(saveButton);
+		userInputContainer.getChildren().add(resetButton);
 	}
+
+	private void initializeTextInput() {
+		Text label = new Text("level Name:");
+		levelNameInput = new TextField("NAME");
+
+		userInputContainer.getChildren().add(label);
+		userInputContainer.getChildren().add(levelNameInput);
+	}
+
 }
