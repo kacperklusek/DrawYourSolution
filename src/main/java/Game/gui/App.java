@@ -71,14 +71,15 @@ public class App extends Application implements ButtonsListener {
 
 		// Creating the world
 		levelManager = new LevelManager();
-		BoardGui gui = new BoardGui(root, currentLevelName);
+		BoardGui boardGui = new BoardGui(root, currentLevelName);
 
 		// add Listeners
-		gui.addButtonListener(this);
-		levelManager.addBoardStateListener(gui);
+		boardGui.addButtonListener(this);
+		levelManager.addBoardStateListener(boardGui);
 		levelManager.addBoardStateListener(objectiveChecker);
 		clickHandler.addItemCreationListener(levelManager);
 		objectiveChecker.addObjectiveStateListener(levelManager);
+		objectiveChecker.addObjectiveStateListener(boardGui);
 
 
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);

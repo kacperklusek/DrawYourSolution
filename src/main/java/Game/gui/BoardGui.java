@@ -35,6 +35,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -43,14 +44,15 @@ import java.util.List;
 
 import static java.util.Objects.isNull;
 
-public class BoardGui implements BoardStateListener {
+public class BoardGui implements BoardStateListener, ObjectiveListener {
 	public static final int SCALE = 32;
-    public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.4*SCALE);
+    public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.7*SCALE);
 	private final List<ButtonsListener> buttonsListeners = new ArrayList<>();
 
 	Group group;
 	HBox userInputContainer;
 	TextField levelNameInput;
+	Text messageText;
 
 	public BoardGui(Group group, String levelName) {
 		this.group = group;
@@ -58,6 +60,7 @@ public class BoardGui implements BoardStateListener {
 		this.group.getChildren().add(userInputContainer);
 		initializeButtons();
 		initializeTextInput(levelName);
+		addInstructions();
 	}
 
 	@Override
@@ -174,4 +177,16 @@ public class BoardGui implements BoardStateListener {
 		userInputContainer.getChildren().add(levelNameInput);
 	}
 
+	private void addInstructions() {
+		Text instruction = new Text(" click LMB to draw lines, PMB to spawn balls");
+		messageText = new Text(" get the colored balls to destined targets!");
+		VBox box = new VBox();
+		box.getChildren().addAll(instruction, messageText);
+		userInputContainer.getChildren().add(box);
+	}
+
+	@Override
+	public void objectiveSatisfied() {
+		messageText.setText(" CONGRATULATIONS, YOU WIN!");
+	}
 }
