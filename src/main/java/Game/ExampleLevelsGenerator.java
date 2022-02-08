@@ -46,20 +46,20 @@ public class ExampleLevelsGenerator {
         List<TargetConfig> targetConfigs = new ArrayList<>();
         targetConfigs.add(new TargetConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(22, 17),
+                new Vector2Serial(1.5, 15.5),
                 new Vector2Serial(5, 5),
                 0
         ));
         targetConfigs.add(new TargetConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(12, 17),
+                new Vector2Serial(11.5, 15.5),
                 new Vector2Serial(5, 5),
                 1
         ));
         List<ConstraintConfig> constraintConfigs = new ArrayList<>();
         constraintConfigs.add( new ConstraintConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(22, 2),
+                new Vector2Serial(21.5, 0.5),
                 new Vector2Serial(5, 14.5)
         ));
 
@@ -89,7 +89,7 @@ public class ExampleLevelsGenerator {
         for(int i = 0; i < targetsNumber; i++){
             targetConfigs.add(new TargetConfig(
                     ShapeType.RECTANGLE,
-                    new Vector2Serial(1+4.333*i, 19),
+                    new Vector2Serial(0.5+4.333*i, 17.5),
                     new Vector2Serial(4.333, 2.94),
                     indexList.get(i)
             ));
@@ -154,25 +154,25 @@ public class ExampleLevelsGenerator {
         List<TargetConfig> targetConfigs = new ArrayList<>();
         targetConfigs.add(new TargetConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(22, 17),
+                new Vector2Serial(21.5, 15.5),
                 new Vector2Serial(5, 5),
                 0
         ));
         targetConfigs.add(new TargetConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(12, 17),
+                new Vector2Serial(11.5, 15.5),
                 new Vector2Serial(5, 5),
                 1
         ));
         List<ConstraintConfig> constraintConfigs = new ArrayList<>();
         constraintConfigs.add( new ConstraintConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(22, 2),
-                new Vector2Serial(5, 14.5)
+                new Vector2Serial(21.5, 0.5),
+                new Vector2Serial(5, 15)
         ));
         constraintConfigs.add( new ConstraintConfig(
                 ShapeType.RECTANGLE,
-                new Vector2Serial(10, 12),
+                new Vector2Serial(9.5, 10.5),
                 new Vector2Serial(9, 7)
         ));
 

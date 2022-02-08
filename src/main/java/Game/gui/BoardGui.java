@@ -46,7 +46,8 @@ import static java.util.Objects.isNull;
 
 public class BoardGui implements BoardStateListener, ObjectiveListener {
 	public static final int SCALE = 32;
-    public static final Vector2Serial BOARD_OFFSET = new Vector2Serial(0.5*SCALE, 1.7*SCALE);
+    public static final Vector2Serial SCALED_OFFSET = new Vector2Serial(0.5*SCALE, 1.7*SCALE);
+    public static final Vector2Serial OFFSET = new Vector2Serial(0.5, 1.7);
 	private final List<ButtonsListener> buttonsListeners = new ArrayList<>();
 
 	Group group;
@@ -105,16 +106,16 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 				javafx.scene.shape.Rectangle shape = new javafx.scene.shape.Rectangle();
 				shape.setWidth(size.x * SCALE);
 				shape.setHeight(size.y * SCALE);
-				shape.setX(position.x * SCALE);
-				shape.setY(position.y * SCALE);
+				shape.setX(position.x * SCALE + SCALED_OFFSET.x);
+				shape.setY(position.y * SCALE + SCALED_OFFSET.y);
 				shape.setFill(color);
 				this.group.getChildren().add(shape);
 			}
 			case CIRCLE -> {
 				javafx.scene.shape.Circle shape = new javafx.scene.shape.Circle();
 				shape.setRadius(size.x);
-				shape.setCenterX(position.x * SCALE);
-				shape.setCenterY(position.y * SCALE);
+				shape.setCenterX(position.x * SCALE + SCALED_OFFSET.x);
+				shape.setCenterY(position.y * SCALE + SCALED_OFFSET.y);
 				shape.setFill(color);
 			}
 		}
@@ -178,7 +179,7 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 	}
 
 	private void addInstructions() {
-		Text instruction = new Text(" click LMB to draw lines, PMB to spawn balls");
+		Text instruction = new Text(" click LMB to draw lines, RMB to spawn balls");
 		messageText = new Text(" get the colored balls to destined targets!");
 		VBox box = new VBox();
 		box.getChildren().addAll(instruction, messageText);

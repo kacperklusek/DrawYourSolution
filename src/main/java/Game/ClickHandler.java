@@ -37,8 +37,8 @@ public class ClickHandler {
             // create rectangle bodyConfig
             BodyConfig rectangleConfig = new BodyConfig(
                     ShapeType.RECTANGLE,
-                    new Vector2((x + firstClick.x - 2 * BoardGui.BOARD_OFFSET.x) / (2 * BoardGui.SCALE),
-                               -(y + firstClick.y - 2 * BoardGui.BOARD_OFFSET.y) / (2 * BoardGui.SCALE)),
+                    new Vector2((x + firstClick.x - 2 * BoardGui.SCALED_OFFSET.x) / (2 * BoardGui.SCALE),
+                               -(y + firstClick.y - 2 * BoardGui.SCALED_OFFSET.y) / (2 * BoardGui.SCALE)),
                     new Vector2(Math.sqrt(Math.pow(x - firstClick.x, 2) + Math.pow(y - firstClick.y, 2)) / BoardGui.SCALE,
                             0.2),
                     -Math.atan((firstClick.y - y) / (firstClick.x - x)),
@@ -61,16 +61,17 @@ public class ClickHandler {
     }
 
     private boolean isInConstraint(double x, double y) {
-        Vector2Serial v = new Vector2Serial(x/BoardGui.SCALE, y/BoardGui.SCALE);
-        for(ConstraintConfig con: constraintConfigs) {
+        Vector2Serial click = new Vector2Serial(x/BoardGui.SCALE, y/BoardGui.SCALE);
+                for(ConstraintConfig con: constraintConfigs) {
             switch (con.shape()){
                 case RECTANGLE -> {
-                    if(v.follows(con.position()) && v.precedes(con.position().add(con.size()))) {
+                    if(click.follows(con.position().add(BoardGui.OFFSET)) &&
+                            click.precedes(con.position().add(con.size()).add(BoardGui.OFFSET))) {
                         return true;
                     }
                 }
                 case CIRCLE -> {
-                    if(v.distance(con.position()) <= con.size().x) {
+                    if(click.distance(con.position().add(BoardGui.OFFSET)) <= con.size().x) {
                         return true;
                     }
                 }
@@ -80,8 +81,8 @@ public class ClickHandler {
     }
 
     private void handleSECONDARY(double x, double y) {
-        Vector2 v = new Vector2((x - BoardGui.BOARD_OFFSET.x) / BoardGui.SCALE,
-                           (-y + BoardGui.BOARD_OFFSET.y) / BoardGui.SCALE);
+        Vector2 v = new Vector2((x - BoardGui.SCALED_OFFSET.x) / BoardGui.SCALE,
+                           (-y + BoardGui.SCALED_OFFSET.y) / BoardGui.SCALE);
 
         System.out.println(v.x + "  " + v.y);
 
@@ -90,8 +91,8 @@ public class ClickHandler {
         // create ball bodyConfig
         BodyConfig bodyConfig = new BodyConfig(
                 ShapeType.CIRCLE,
-                new Vector2((x - BoardGui.BOARD_OFFSET.x) / BoardGui.SCALE,
-                           (-y + BoardGui.BOARD_OFFSET.y) / BoardGui.SCALE),
+                new Vector2((x - BoardGui.SCALED_OFFSET.x) / BoardGui.SCALE,
+                           (-y + BoardGui.SCALED_OFFSET.y) / BoardGui.SCALE),
                 new Vector2(1, 1), // dla circle radius będzie jedną ze współrzędnych
                 0,
                 MassType.NORMAL

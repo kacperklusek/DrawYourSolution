@@ -47,7 +47,7 @@ public class App extends Application implements ButtonsListener {
 
 	Stage primaryStage;
 
-	String currentLevelName = "sorting_solution";
+	String currentLevelName = "trampoline";
 
 	@Override
 	public void init() {
@@ -82,19 +82,18 @@ public class App extends Application implements ButtonsListener {
 		objectiveChecker.addObjectiveStateListener(boardGui);
 
 
-		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
+		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.SCALED_OFFSET);
         levelManager.createBoundaries();
         try {
             levelManager.loadLevel(persistency.loadLevel(currentLevelName));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
 
-			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelTrampoline());
+			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelSimple());
         }
 		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 
         // start simulation
-//		levelManager.startSimulation();
 		primaryStage.show();
 
 		// clickHandler
