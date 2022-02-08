@@ -34,7 +34,6 @@ import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -53,12 +52,12 @@ public class BoardGui implements BoardStateListener {
 	HBox userInputContainer;
 	TextField levelNameInput;
 
-	public BoardGui(Group group) {
+	public BoardGui(Group group, String levelName) {
 		this.group = group;
 		this.userInputContainer = new HBox();
 		this.group.getChildren().add(userInputContainer);
 		initializeButtons();
-		initializeTextInput();
+		initializeTextInput(levelName);
 	}
 
 	@Override
@@ -148,6 +147,12 @@ public class BoardGui implements BoardStateListener {
 				listener.handleSave(levelNameInput.getText());
 			}
 		});
+		Button loadButton = new Button("load level config");
+		loadButton.setOnAction(event -> {
+			for(ButtonsListener listener: buttonsListeners) {
+				listener.handleLoad(levelNameInput.getText());
+			}
+		});
 		Button resetButton = new Button("RESET (R)");
 		resetButton.setOnAction(event -> {
 			for(ButtonsListener listener: buttonsListeners) {
@@ -156,13 +161,14 @@ public class BoardGui implements BoardStateListener {
 		});
 		userInputContainer.getChildren().add(startButton);
 		userInputContainer.getChildren().add(stopButton);
-		userInputContainer.getChildren().add(saveButton);
 		userInputContainer.getChildren().add(resetButton);
+		userInputContainer.getChildren().add(saveButton);
+		userInputContainer.getChildren().add(loadButton);
 	}
 
-	private void initializeTextInput() {
-		Text label = new Text("level Name:");
-		levelNameInput = new TextField("NAME");
+	private void initializeTextInput(String levelName) {
+		Text label = new Text(" level Name: ");
+		levelNameInput = new TextField(levelName);
 
 		userInputContainer.getChildren().add(label);
 		userInputContainer.getChildren().add(levelNameInput);

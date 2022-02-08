@@ -28,20 +28,12 @@
 package Game.gui;
 
 import Game.*;
-import Game.configs.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dyn4j.dynamics.joint.Joint;
-import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Vector2;
-import org.w3c.dom.UserDataHandler;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class App extends Application implements ButtonsListener {
 
@@ -54,6 +46,8 @@ public class App extends Application implements ButtonsListener {
 	ObjectiveChecker objectiveChecker;
 
 	Stage primaryStage;
+
+	String currentLevelName = "sorting_solution";
 
 	@Override
 	public void init() {
@@ -77,7 +71,7 @@ public class App extends Application implements ButtonsListener {
 
 		// Creating the world
 		levelManager = new LevelManager();
-		BoardGui gui = new BoardGui(root);
+		BoardGui gui = new BoardGui(root, currentLevelName);
 
 		// add Listeners
 		gui.addButtonListener(this);
@@ -90,7 +84,7 @@ public class App extends Application implements ButtonsListener {
 		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.BOARD_OFFSET);
         levelManager.createBoundaries();
         try {
-            levelManager.loadLevel(persistency.loadLevel("trampoline"));
+            levelManager.loadLevel(persistency.loadLevel(currentLevelName));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
 
@@ -113,7 +107,7 @@ public class App extends Application implements ButtonsListener {
 				case R -> start(primaryStage);
 				case P -> levelManager.stopSimulation();
 				case L -> levelManager.startSimulation();
-                case S -> persistency.saveLevel("trampoline", levelManager.generateLevelConfig());
+                case S -> persistency.saveLevel(currentLevelName, levelManager.generateLevelConfig());
 			}
 		});
 	}
@@ -135,6 +129,13 @@ public class App extends Application implements ButtonsListener {
 
 	@Override
 	public void handleSave(String levelName) {
+		currentLevelName = levelName;
 		persistency.saveLevel(levelName, levelManager.generateLevelConfig());
+	}
+
+	@Override
+	public void handleLoad(String levelName) {
+		currentLevelName = levelName;
+		handleReset();
 	}
 }
