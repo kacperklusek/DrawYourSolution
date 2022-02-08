@@ -26,10 +26,6 @@ public class SimpleObjectiveChecker implements BodyListener, SimpleObjectivePubl
 
             Vector2Serial position = new Vector2Serial(new Vector2Serial(body.getTransform().getTranslation()));
             position = new Vector2Serial(position.x, - position.y);
-            // todo propably don't need this
-//            position = position.add(new Vector2Serial(
-//                    BoardGui.BOARD_OFFSET.x / BoardGui.SCALE,
-//                    BoardGui.BOARD_OFFSET.y / BoardGui.SCALE));
 
             switch (targetConfig.shape()) {
                 case RECTANGLE -> {

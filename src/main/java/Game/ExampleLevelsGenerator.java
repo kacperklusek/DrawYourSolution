@@ -91,7 +91,16 @@ public class ExampleLevelsGenerator {
                     ShapeType.RECTANGLE,
                     new Vector2Serial(0.5+4.333*i, 17.5),
                     new Vector2Serial(4.333, 2.94),
-                    indexList.get(i)
+//                    indexList.get(i)
+                    switch (i) {
+                        case 0 -> 3;
+                        case 1 -> 0;
+                        case 2 -> 1;
+                        case 3 -> 5;
+                        case 4 -> 2;
+                        case 5 -> 4;
+                        default -> throw new IllegalStateException("Unexpected value: " + i);
+                    }
             ));
         }
         List<ConstraintConfig> constraintConfigs = new ArrayList<>();

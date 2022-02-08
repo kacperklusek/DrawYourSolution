@@ -33,18 +33,24 @@ import Game.configs.ShapeType;
 import Game.configs.TargetConfig;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 
 public class BoardGui implements BoardStateListener, ObjectiveListener {
+	private final String LEVELS_DATA_PATH = "./levelsData";
 	public static final int SCALE = 32;
     public static final Vector2Serial SCALED_OFFSET = new Vector2Serial(0.5*SCALE, 1.7*SCALE);
     public static final Vector2Serial OFFSET = new Vector2Serial(0.5, 1.7);
@@ -52,7 +58,7 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 
 	Group group;
 	HBox userInputContainer;
-	TextField levelNameInput;
+	ComboBox<String> levelNameInput;
 	Text messageText;
 
 	public BoardGui(Group group, String levelName) {
@@ -60,7 +66,7 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 		this.userInputContainer = new HBox();
 		this.group.getChildren().add(userInputContainer);
 		initializeButtons();
-		initializeTextInput(levelName);
+		initializeLevelSelector(levelName);
 		addInstructions();
 	}
 
@@ -148,13 +154,13 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 		Button saveButton = new Button("save level config (S)");
 		saveButton.setOnAction(event -> {
 			for(ButtonsListener listener: buttonsListeners) {
-				listener.handleSave(levelNameInput.getText());
+				listener.handleSave(levelNameInput.getValue());
 			}
 		});
 		Button loadButton = new Button("load level config");
 		loadButton.setOnAction(event -> {
 			for(ButtonsListener listener: buttonsListeners) {
-				listener.handleLoad(levelNameInput.getText());
+				listener.handleLoad(levelNameInput.getValue());
 			}
 		});
 		Button resetButton = new Button("RESET (R)");
@@ -170,9 +176,23 @@ public class BoardGui implements BoardStateListener, ObjectiveListener {
 		userInputContainer.getChildren().add(loadButton);
 	}
 
-	private void initializeTextInput(String levelName) {
+	private void initializeLevelSelector(String levelName) {
 		Text label = new Text(" level Name: ");
-		levelNameInput = new TextField(levelName);
+		levelNameInput = new ComboBox<>();
+
+		Set<String> fileNames = Stream.of(Objects.requireNonNull(new File(LEVELS_DATA_PATH).listFiles()))
+				.filter(File::isFile)
+				.map(File::getName)
+				.collect(Collectors.toSet());
+
+		for (String fileName: fileNames) {
+			// here i'm stripping 'lvl_' from beginning and '.dat' from the end
+			levelNameInput.getItems().add(fileName.substring(4, fileName.length()-4));
+		}
+
+		levelNameInput.setValue(levelName);
+		levelNameInput.setEditable(true);
+
 
 		userInputContainer.getChildren().add(label);
 		userInputContainer.getChildren().add(levelNameInput);

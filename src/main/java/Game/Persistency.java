@@ -1,9 +1,6 @@
 package Game;
 
-import Game.configs.BodyConfig;
-import Game.configs.ItemConfig;
-import Game.configs.LevelConfig;
-import Game.configs.ShapeType;
+import Game.configs.*;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 

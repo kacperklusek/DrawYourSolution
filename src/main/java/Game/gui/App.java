@@ -44,10 +44,11 @@ public class App extends Application implements ButtonsListener {
 	LevelManager levelManager;
     Persistency persistency;
 	ObjectiveChecker objectiveChecker;
+	BoardGui boardGui;
 
 	Stage primaryStage;
 
-	String currentLevelName = "trampoline";
+	String currentLevelName = "sorting";
 
 	@Override
 	public void init() {
@@ -71,30 +72,9 @@ public class App extends Application implements ButtonsListener {
 
 		// Creating the world
 		levelManager = new LevelManager();
-		BoardGui boardGui = new BoardGui(root, currentLevelName);
+		boardGui = new BoardGui(root, currentLevelName);
 
-		// add Listeners
-		boardGui.addButtonListener(this);
-		levelManager.addBoardStateListener(boardGui);
-		levelManager.addBoardStateListener(objectiveChecker);
-		clickHandler.addItemCreationListener(levelManager);
-		objectiveChecker.addObjectiveStateListener(levelManager);
-		objectiveChecker.addObjectiveStateListener(boardGui);
-
-
-		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.SCALED_OFFSET);
-        levelManager.createBoundaries();
-        try {
-            levelManager.loadLevel(persistency.loadLevel(currentLevelName));
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-
-			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelSimple());
-        }
-		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
-
-        // start simulation
-		primaryStage.show();
+		addListeners();
 
 		// clickHandler
 		scene.setOnMouseClicked(e -> {
@@ -110,6 +90,31 @@ public class App extends Application implements ButtonsListener {
                 case S -> persistency.saveLevel(currentLevelName, levelManager.generateLevelConfig());
 			}
 		});
+
+		loadLevel();
+		primaryStage.show();
+	}
+
+	private void addListeners() {
+		boardGui.addButtonListener(this);
+		levelManager.addBoardStateListener(boardGui);
+		levelManager.addBoardStateListener(objectiveChecker);
+		clickHandler.addItemCreationListener(levelManager);
+		clickHandler.setBoardDimensions(levelManager.WIDTH, levelManager.HEIGHT, BoardGui.SCALED_OFFSET);
+		objectiveChecker.addObjectiveStateListener(levelManager);
+		objectiveChecker.addObjectiveStateListener(boardGui);
+	}
+
+	private void loadLevel() {
+		levelManager.createBoundaries();
+		try {
+			levelManager.loadLevel(persistency.loadLevel(currentLevelName));
+		} catch (IOException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+
+			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelSorting());
+		}
+		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 	}
 
 	@Override
