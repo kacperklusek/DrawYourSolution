@@ -112,7 +112,7 @@ public class App extends Application implements ButtonsListener {
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
 
-			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelSorting());
+			levelManager.loadLevel(ExampleLevelsGenerator.generateLevelTemplate());
 		}
 		clickHandler.setConstraints(levelManager.getLevelConfig().constraintConfigs);
 	}

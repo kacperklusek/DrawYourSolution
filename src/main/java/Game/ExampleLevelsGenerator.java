@@ -187,4 +187,100 @@ public class ExampleLevelsGenerator {
 
         return new LevelConfig(itemList, targetConfigs, constraintConfigs);
     }
+
+    public static LevelConfig generateLevelBasic(){
+        ItemConfig objectiveCircle = new ItemConfig();
+        objectiveCircle.addBodyConfig(new BodyConfig(
+                ShapeType.CIRCLE,
+                new Vector2(3, -8),
+                new Vector2(1, 1),
+                0,
+                MassType.NORMAL,
+                0
+        ));
+        ItemConfig obstacle = new ItemConfig();
+        obstacle.addBodyConfig(new BodyConfig(
+                ShapeType.RECTANGLE,
+                new Vector2(15, -20),
+                new Vector2(5, 0.3),
+                -3.14*0.8,
+                MassType.INFINITE
+        ));
+
+        List<ItemConfig> itemList = new ArrayList<>();
+        itemList.add(objectiveCircle);
+        itemList.add(obstacle);
+
+        List<TargetConfig> targetConfigs = new ArrayList<>();
+        targetConfigs.add(new TargetConfig(
+                ShapeType.RECTANGLE,
+                new Vector2Serial(21.5, 15.5),
+                new Vector2Serial(5, 5),
+                0
+        ));
+
+        List<ConstraintConfig> constraintConfigs = new ArrayList<>();
+
+        constraintConfigs.add( new ConstraintConfig(
+                ShapeType.RECTANGLE,
+                new Vector2Serial(4.5, 0.5),
+                new Vector2Serial(22, 20)
+        ));
+
+        return new LevelConfig(itemList, targetConfigs, constraintConfigs);
+    }
+    public static LevelConfig generateLevelTakeoff(){
+        ItemConfig objectiveCircle = new ItemConfig();
+        objectiveCircle.addBodyConfig(new BodyConfig(
+                ShapeType.CIRCLE,
+                new Vector2(3, -1.5),
+                new Vector2(1, 1),
+                0,
+                MassType.NORMAL,
+                0
+        ));
+
+
+        List<ItemConfig> itemList = new ArrayList<>();
+        itemList.add(objectiveCircle);
+
+        List<TargetConfig> targetConfigs = new ArrayList<>();
+        targetConfigs.add(new TargetConfig(
+                ShapeType.RECTANGLE,
+                new Vector2Serial(21.5, 0.5),
+                new Vector2Serial(5, 5),
+                0
+        ));
+
+        List<ConstraintConfig> constraintConfigs = new ArrayList<>();
+
+        return new LevelConfig(itemList, targetConfigs, constraintConfigs);
+    }
+    public static LevelConfig generateLevelTemplate(){
+        ItemConfig objectiveCircle = new ItemConfig();
+        objectiveCircle.addBodyConfig(new BodyConfig(
+                ShapeType.CIRCLE,
+                new Vector2(3, -3),
+                new Vector2(1, 1),
+                0,
+                MassType.NORMAL,
+                0
+        ));
+
+
+        List<ItemConfig> itemList = new ArrayList<>();
+        itemList.add(objectiveCircle);
+
+        List<TargetConfig> targetConfigs = new ArrayList<>();
+        targetConfigs.add(new TargetConfig(
+                ShapeType.RECTANGLE,
+                new Vector2Serial(21.5, 15.5),
+                new Vector2Serial(5, 5),
+                0
+        ));
+
+        List<ConstraintConfig> constraintConfigs = new ArrayList<>();
+
+        return new LevelConfig(itemList, targetConfigs, constraintConfigs);
+    }
 }
